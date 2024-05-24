@@ -1,10 +1,10 @@
 const express = require("express");
-require("./db/mongoose");
+require("./src/db/mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-const productRouter = require("./routes/product");
-const orderRouter = require("./routes/advertisment");  
+const productRouter = require("./src/routes/product");
+const orderRouter = require("./src/routes/advertisment");  
 
 const app = express();
 
