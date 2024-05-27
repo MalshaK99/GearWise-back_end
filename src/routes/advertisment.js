@@ -24,4 +24,7 @@ router.post("/ad", upload.single("adImage"), advertisementController.createAdver
 // Get all advertisements
 router.get("/ad", advertisementController.getAllAdvertisements);
 
+// Get count of all advertisements
+router.get("/ad/count", advertisementController.getAdvertisementCount);
+
 module.exports = router;
