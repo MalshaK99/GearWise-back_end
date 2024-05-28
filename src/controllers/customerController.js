@@ -12,6 +12,7 @@ exports.getAllCustomers = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
 //add cus(just to test)
 exports.createCustomer = async (req, res) => {
     console.log(req.body);
