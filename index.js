@@ -11,11 +11,10 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-
-app.use(productRouter);
-app.use(adRouter); 
-app.use(vehicleRouter);
-app.use(customerRouter);
+app.use("/api/products", productRouter);
+app.use("/api/ads", adRouter);
+app.use("/api/vehicles", vehicleRouter);
+app.use("/api/customers", customerRouter);
 
 const port = 4005;
 
