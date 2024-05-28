@@ -31,6 +31,10 @@ const customerSchema = new Schema({
     profilePhoto: {
         type: String,
         required: true
+    },
+    status:{
+        type: String,
+        default: "active"
     }
     
 });
