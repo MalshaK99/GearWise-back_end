@@ -29,3 +29,12 @@ exports.getAllAdvertisements = async (req, res) => {
         res.status(400).send(error);
     }
 };
+//get the count of ads
+exports.getAdvertisementCount = async (req, res) => {
+    try {
+        const count = await Ad.countDocuments({});
+        res.status(200).json({ count });
+    } catch (error) {
+        res.status(400).send(error);
+    }
+};

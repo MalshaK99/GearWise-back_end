@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema({
+const review_ratingsSchema = new Schema({
 
     name :{
 
@@ -12,7 +12,7 @@ const productSchema = new Schema({
 
     },
 
-    quantity :{
+    rating :{
 
         type:Number,
 
@@ -20,16 +20,9 @@ const productSchema = new Schema({
 
     },
 
-    price :{
+    review :{
 
-        type : Number,
-
-        required : true
-
-    },
-    date :{
-
-        type : Date,
+        type : String,
 
         required : true
 
@@ -39,8 +32,8 @@ const productSchema = new Schema({
 
  
 
-const Product = mongoose.model("Product",productSchema)
+const Review_Ratings = mongoose.model("Review_Ratings",review_ratingsSchema)
 
  
 
-module.exports = Product;
+module.exports = Review_Ratings;
