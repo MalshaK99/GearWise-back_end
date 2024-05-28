@@ -19,12 +19,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Create a new ad
-router.post("/ad", upload.single("adImage"), advertisementController.createAdvertisement);
+router.post("/", upload.single("adImage"), advertisementController.createAdvertisement);
 
 // Get all advertisements
-router.get("/ad", advertisementController.getAllAdvertisements);
+router.get("/", advertisementController.getAllAdvertisements);
 
 // Get count of all advertisements
-router.get("/ad/count", advertisementController.getAdvertisementCount);
+router.get("/count", advertisementController.getAdvertisementCount);
 
 module.exports = router;
