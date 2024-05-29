@@ -7,6 +7,7 @@ const productRouter = require("./src/routes/product");
 const adRouter = require("./src/routes/advertisment");  
 const vehicleRouter=require("./src/routes/vehicle");
 const customerRouter=require("./src/routes/customer");
+const appoinmentRouter=require("./src/routes/appoinment");
 const app = express();
 
 app.use(cors());
@@ -15,6 +16,7 @@ app.use("/api/products", productRouter);
 app.use("/api/ads", adRouter);
 app.use("/api/vehicles", vehicleRouter);
 app.use("/api/customers", customerRouter);
+app.use("/api/appoinments", appoinmentRouter);
 
 const port = 4005;
 
