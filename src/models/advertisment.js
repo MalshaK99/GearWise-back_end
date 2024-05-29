@@ -23,7 +23,11 @@ const adSchema = new Schema({
     description: {
         type: String,
         required: true
-    }
+    },
+    approved: {
+        type: Boolean,
+        default: false
+      }
 });
 
 const Ad = mongoose.model("Ad", adSchema);

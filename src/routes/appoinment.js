@@ -1,12 +1,9 @@
-
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const appoinmentController = require("../controllers/appoinmentController");
+const appointmentController = require('../controllers/appoinmentController');
 
-
-//appoinment count
-router.get('/count',appoinmentController.getAppoinmentCount);
-
-
-
+// Get appointments
+router.get('/', appointmentController.getAppointmentsByDate);
+//add appoinments
+router.post('/',appointmentController.createAppoinment);
 module.exports = router;
