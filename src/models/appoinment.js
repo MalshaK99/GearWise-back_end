@@ -1,5 +1,3 @@
-// models/Appointment.js
-
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -29,7 +27,8 @@ const appointmentSchema = new Schema({
     },
     status: {
         type: String,
-        required: true
+        required: true,
+        default: "Active"
     }
 });
 

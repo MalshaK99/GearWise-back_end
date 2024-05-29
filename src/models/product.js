@@ -33,7 +33,12 @@ const productSchema = new Schema({
 
         required : true
 
+    },
+    s_name:{
+        type: String,
+        required:true
     }
+    
 
 })
 

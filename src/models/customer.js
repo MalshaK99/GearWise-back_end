@@ -35,7 +35,12 @@ const customerSchema = new Schema({
     status:{
         type: String,
         default: "active"
-    }
+    },
+    vehicle: {
+         type: mongoose.Schema.Types.ObjectId, 
+         ref: 'Vehicle' 
+        } 
+
     
 });
 

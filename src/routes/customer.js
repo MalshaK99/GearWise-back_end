@@ -9,11 +9,13 @@ const customerController = require("../controllers/customerController");
 router.get("/", customerController.getAllCustomers);
 
 //if not relevant this del this(created to test)
-router.post("/", customerController.createCustomer);
+//router.post("/", customerController.createCustomer);
 
 //activate-deactivate customers
 router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);
 
+//cus count
+router.get('/count',customerController.getCustomerCount);
 
 
 
