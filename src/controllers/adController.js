@@ -23,7 +23,7 @@ exports.createAdvertisement = async (req, res) => {
 //get the count of ads
 exports.getAdvertisementCount = async (req, res) => {
     try {
-        const count = await Ad.countDocuments({});
+        const count = await Ad.countDocuments({ approved: false });
         res.status(200).json({ count });
     } catch (error) {
         res.status(400).send(error);
