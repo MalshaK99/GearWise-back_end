@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -6,6 +6,10 @@ const vehicleSchema = new Schema({
     vehicle_no: {
         type: String,
         unique: true,
+        required: true
+    },
+    cus_name: {
+        type: String,
         required: true
     },
     v_type: {
@@ -24,10 +28,19 @@ const vehicleSchema = new Schema({
         type: Date,
         default: null
     },
-    replacedParts: {
-        type: String,
-        default: null
-    },
+    replacedParts: [
+        {
+            productId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product',
+                required: true
+            },
+            quantity: {
+                type: Number,
+                required: true
+            }
+        }
+    ],
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
@@ -35,6 +48,6 @@ const vehicleSchema = new Schema({
     }
 });
 
-const Vehicle = mongoose.model("Vehicle", vehicleSchema);
+const Vehicle = mongoose.model('Vehicle', vehicleSchema);
 
 module.exports = Vehicle;
