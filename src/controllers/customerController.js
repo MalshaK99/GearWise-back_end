@@ -35,17 +35,17 @@ exports.getAllCustomers = async (req, res) => {
 };
 
 // Add customer (just to test)
-// exports.createCustomer = async (req, res) => {
-//     console.log(req.body);
-//     const customer = new Customer(req.body);
+exports.createCustomer = async (req, res) => {
+    console.log(req.body);
+    const customer = new Customer(req.body);
 
-//     try {
-//         await customer.save();
-//         res.status(201).send(customer);
-//     } catch (error) {
-//         res.status(400).send(error);
-//     }
-// };
+    try {
+        await customer.save();
+        res.status(201).send(customer);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+};
 
 // Toggle customer status
 exports.toggleCustomerStatus = async (req, res) => {

@@ -49,7 +49,7 @@ exports.updateProductById = async (req, res) => {
         if (!updatedProduct) {
             return res.status(404).send();
         }
-        res.status(200).send(updatedProduct);
+        res.status(200).send( updatedProduct);
     } catch (error) {
         res.status(400).send(error);
     }
