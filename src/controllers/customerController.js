@@ -76,3 +76,89 @@ exports.getCustomerCount = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
+// //add customer
+// router.post("/users",async(req,res)=>{
+    
+//     // console.log(req.body);
+//     const user = new User(req.body);
+
+//     try {
+//         await user.save();  
+//         res.status(201).send(user)
+//     } catch (error) {
+//         res.status(400).send(error)       
+//     }
+// });
+
+//add customer 
+exports.addCustomer = async (req, res) => {
+    console.log(req.body);
+    const customer = new Customer(req.body);
+
+
+    try {
+        await customer.save();
+        res.status(201).send(customer);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+};
+
+// //get all customers userprofile
+// exports.getCustomerprofile = async (req, res) => {
+//     // console.log(req.body);
+//     // const customer = new Customer(req.body);
+
+//     try {
+//         const customer = await Customer.find({});
+//         res.status(201).send(customer);
+//     } catch (error) {
+//         res.status(400).send(error);
+//     }
+// }; 
+
+ 
+ //get specific user detail for userprofile
+ exports.getOneCusprofile = async (req, res) => {
+
+//  router.get("/users/:id",async(req,res)=>{
+    const _id = req.params.id;
+
+    try {
+        const customer = await Customer.findById(_id)
+
+        if(!customer){
+            return res.status(404).send
+        }
+
+        res.status(201).send(customer)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+};
+
+
+//Update userProfile
+exports.updateProfile = async (req, res) => {
+
+// router.put("/users/:id",async(req,res)=>{
+    const _id = req.params.id;
+
+    try {
+        const updatedCustomer = await Customer.findByIdAndUpdate(_id,req.body,{new:true})
+
+        if(!updatedCustomer){
+            return res.status(404).send()
+        }
+
+        res.status(200).send(updatedCustomer)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+};
+
+
+
+
+
