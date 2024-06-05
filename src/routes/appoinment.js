@@ -5,5 +5,5 @@ const appointmentController = require('../controllers/appoinmentController');
 // Get appointments
 router.get('/', appointmentController.getAppointmentsByDate);
 //add appoinments
-router.post('/',appointmentController.createAppoinment);
+router.post('/createappointment',appointmentController.createAppoinment);
 module.exports = router;
