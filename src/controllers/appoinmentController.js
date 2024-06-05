@@ -21,7 +21,7 @@ exports.getAppointmentsByDate = async (req, res) => {
         $gte: startDate,
         $lt: endDate
       }
-    }).populate('customerId').populate('vehicleId');
+    }).populate('appointmentId').populate('vehicleId');
 
     res.json({ appointments });
   } catch (error) {
@@ -42,3 +42,22 @@ exports.createAppoinment = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
+exports.getappointment = async (req, res) => {
+
+  //  router.get("/users/:id",async(req,res)=>{
+      const _id = req.params.id;
+  
+  
+      try {
+        // find the relevant appointments releated to the one customer
+          const appointment = await Appointment.find({customerId:_id})
+          // const appointment = await appointment.find()
+          if(!appointment){
+              return res.status(404).send
+          }
+          res.status(201).send(appointment)
+      } catch (error) {
+          res.status(400).send(error)
+      }
+  };
