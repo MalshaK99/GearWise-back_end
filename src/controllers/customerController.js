@@ -1,12 +1,12 @@
 const Customer = require("../models/customer");
 const Vehicle = require("../models/vehicle");
-const Appointment=require("../models/appoinment");
+const Appointment = require("../models/appoinment");
 // Get all customers with their vehicles and appointment counts
 exports.getAllCustomers = async (req, res) => {
     try {
         // Get all customers
         const customers = await Customer.find({})
-            .populate('vehicle') 
+            .populate('vehicle')
             .lean();
 
         // For each customer, get the appointment count
@@ -14,7 +14,7 @@ exports.getAllCustomers = async (req, res) => {
             customers.map(async (customer) => {
                 // Get the customer's vehicle
                 const vehicle = await Vehicle.findOne({ owner: customer._id });
-                
+
                 // Count the number of appointments for the customer
                 const appointmentCount = await Appointment.countDocuments({ customerId: customer._id });
 
@@ -79,7 +79,7 @@ exports.getCustomerCount = async (req, res) => {
 
 // //add customer
 // router.post("/users",async(req,res)=>{
-    
+
 //     // console.log(req.body);
 //     const user = new User(req.body);
 
@@ -116,14 +116,18 @@ exports.addCustomer = async (req, res) => {
 //     } catch (error) {
 //         res.status(400).send(error);
 //     }
-// }; 
+// };
+
 
  
  //get specific user detail for userprofile
  // and for appointment form details
- exports.getOneCusprofile = async (req, res) => {
+ //exports.getOneCusprofile = async (req, res) => {
 
-//  router.get("/users/:id",async(req,res)=>{
+//get specific user detail for userprofile
+exports.getOneCusprofile = async (req, res) => {
+
+    //  router.get("/users/:id",async(req,res)=>{
     const _id = req.params.id;
 
 
@@ -131,7 +135,7 @@ exports.addCustomer = async (req, res) => {
         const customer = await Customer.findById(_id)
         // const customer = await Customer.find()
 
-        if(!customer){
+        if (!customer) {
             return res.status(404).send
         }
         res.status(201).send(customer)
@@ -144,13 +148,13 @@ exports.addCustomer = async (req, res) => {
 //Update userProfile
 exports.updateProfile = async (req, res) => {
 
-// router.put("/users/:id",async(req,res)=>{
+    // router.put("/users/:id",async(req,res)=>{
     const _id = req.params.id;
 
     try {
-        const updatedCustomer = await Customer.findByIdAndUpdate(_id,req.body,{new:true})
+        const updatedCustomer = await Customer.findByIdAndUpdate(_id, req.body, { new: true })
 
-        if(!updatedCustomer){
+        if (!updatedCustomer) {
             return res.status(404).send()
         }
 
