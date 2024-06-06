@@ -15,7 +15,7 @@ router.post("/customerreg", customerController.createCustomer);
 router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);
 
 //cus count
-router.get('/count',customerController.getCustomerCount);
+router.get('/count', customerController.getCustomerCount);
 
 //add customers userPrifile
 router.post("/customers", customerController.addCustomer);
