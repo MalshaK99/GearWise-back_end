@@ -1,36 +1,47 @@
 const Customer = require("../models/customer");
 const Vehicle = require("../models/vehicle");
 const Appointment = require("../models/appoinment");
-// Get all customers with their vehicles and appointment counts
+
+
 exports.getAllCustomers = async (req, res) => {
     try {
         // Get all customers
-        const customers = await Customer.find({})
-            .populate('vehicle')
-            .lean();
+        const customers = await Customer.find({ role: 'customer'}).lean();
 
-        // For each customer, get the appointment count
-        const customersWithAppointments = await Promise.all(
+        // Fetch details for each customer
+        const customersWithDetails = await Promise.all(
             customers.map(async (customer) => {
-                // Get the customer's vehicle
+                // Get vehicle information for the customer
                 const vehicle = await Vehicle.findOne({ owner: customer._id });
 
                 // Count the number of appointments for the customer
                 const appointmentCount = await Appointment.countDocuments({ customerId: customer._id });
 
-                // Add vehicle and appointment count to the customer object
+                // Get vehicle information from appointment table
+                const appointments = await Appointment.find({ customerId: customer._id }).select('vehicleType vrNo');
+
                 return {
                     ...customer,
                     vehicle,
-                    appointmentCount
+                    appointmentCount,
+                    appointments
                 };
             })
         );
 
-        res.status(200).send(customersWithAppointments);
+        res.status(200).send(customersWithDetails);
     } catch (error) {
         console.error(error);
         res.status(400).send(error);
+    }
+};
+//get suppliers
+exports.fetchSuppliers = async (req, res) => {
+    try {
+        const suppliers = await Customer.find({ role: 'supplier' });
+        res.json(suppliers);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 
@@ -67,10 +78,10 @@ exports.toggleCustomerStatus = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
-//user count
+//cus count
 exports.getCustomerCount = async (req, res) => {
     try {
-        const count = await Customer.countDocuments({});
+        const count = await Customer.countDocuments({ status: "active" , role: 'customer'});
         res.status(200).json({ count });
     } catch (error) {
         res.status(400).send(error);

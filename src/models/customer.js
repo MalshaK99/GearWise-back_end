@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const customerSchema = new Schema({
+const CustomerSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -18,11 +18,11 @@ const customerSchema = new Schema({
     },
     gender: {
         type: String,
-        required: true
+        required: false
     },
     address: {
         type: String,
-        required: true
+        required: false
     },
     password: {
         type: String,
@@ -30,11 +30,15 @@ const customerSchema = new Schema({
     },
     profilePhoto: {
         type: String,
-        required: true
+        required: false
     },
     status:{
         type: String,
         default: "active"
+    },
+    role:{
+        type: String,
+        default: "customer"
     },
     vehicle: {
          type: mongoose.Schema.Types.ObjectId, 
@@ -44,6 +48,6 @@ const customerSchema = new Schema({
     
 });
 
-const Customer = mongoose.model("Customer", customerSchema);
+const Customer = mongoose.model("Customer", CustomerSchema);
 
 module.exports = Customer;
