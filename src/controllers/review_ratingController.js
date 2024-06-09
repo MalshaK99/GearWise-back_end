@@ -1,10 +1,10 @@
-const eview_Ratings = require("../models/review_ratings");
+const Review_ratings = require("../models/review_ratings");
 
 
 //add review 
 exports.addReview = async (req, res) => {
     // console.log(req.body);
-    const review = new Review(req.body);
+    const review = new Review_ratings(req.body);
 
 
     try {
