@@ -8,9 +8,20 @@ const appointmentSchema = new Schema({
         ref: 'Customer',
         required: true
     },
-    vehicleId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Vehicle',
+    vehicleType:{
+        type: String,
+        required: true
+    },
+    vehicleModel:{
+        type: String,
+        required: true
+    },
+    mfYear:{
+        type: String,
+        required: true
+    },
+    vrNo:{
+        type: String,
         required: true
     },
     serviceType: {

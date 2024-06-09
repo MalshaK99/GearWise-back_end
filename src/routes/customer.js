@@ -24,6 +24,7 @@ router.post("/customers", customerController.addCustomer);
 // router.get("/customerspro", customerController.getCustomerprofile);
 
 //Get specific customer details from userProfile
+//and for appointment details
 router.get("/customerspro/:id", customerController.getOneCusprofile);
 
 //Update user profile

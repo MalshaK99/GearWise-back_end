@@ -119,19 +119,25 @@ exports.addCustomer = async (req, res) => {
 // };
 
 
+ 
+ //get specific user detail for userprofile
+ // and for appointment form details
+ //exports.getOneCusprofile = async (req, res) => {
+
 //get specific user detail for userprofile
 exports.getOneCusprofile = async (req, res) => {
 
     //  router.get("/users/:id",async(req,res)=>{
     const _id = req.params.id;
 
+
     try {
         const customer = await Customer.findById(_id)
+        // const customer = await Customer.find()
 
         if (!customer) {
             return res.status(404).send
         }
-
         res.status(201).send(customer)
     } catch (error) {
         res.status(400).send(error)
