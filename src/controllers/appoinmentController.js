@@ -21,7 +21,7 @@ exports.getAppointmentsByDate = async (req, res) => {
         $gte: startDate,
         $lt: endDate
       }
-    }).populate('appointmentId').populate('vehicleId');
+    }).populate('customerId'); // Populate customerId instead of appointmentId
 
     res.json({ appointments });
   } catch (error) {
@@ -29,7 +29,19 @@ exports.getAppointmentsByDate = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+exports.appoinmentCount = async (req, res) => {
+  try {
+      const now = new Date();
 
+      const count = await Appointment.countDocuments({
+          date: { $gt: now }
+      });
+
+      res.status(200).json({ count });
+  } catch (error) {
+      res.status(400).json({ error: error.message });
+  }
+};
 // Create a new 
 exports.createAppoinment = async (req, res) => {
     console.log(req.body);

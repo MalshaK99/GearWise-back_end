@@ -7,6 +7,8 @@ const customerController = require("../controllers/customerController");
 
 // Get all customers
 router.get("/", customerController.getAllCustomers);
+//get suppliers
+router.get('/suppliers', customerController.fetchSuppliers);
 
 //if not relevant this del this(created to test)
 router.post("/customerreg", customerController.createCustomer);
@@ -29,5 +31,7 @@ router.get("/customerspro/:id", customerController.getOneCusprofile);
 
 //Update user profile
 router.put("/customerspro/:id", customerController.updateProfile);
+
+
 
 module.exports = router;

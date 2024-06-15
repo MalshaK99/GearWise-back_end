@@ -35,8 +35,9 @@ const productSchema = new Schema({
 
     },
     s_name:{
-        type: String,
-        required:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Customer',
+        required: true
     }
     
 
