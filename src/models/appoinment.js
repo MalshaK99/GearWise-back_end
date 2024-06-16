@@ -36,6 +36,10 @@ const appointmentSchema = new Schema({
         type: Date,
         required: true
     },
+    nextS_date: {
+        type: Date,
+        default: null
+    },
     status: {
         type: String,
         required: true,

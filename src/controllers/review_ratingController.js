@@ -28,3 +28,11 @@ exports.getReviews = async (req, res) => {
         res.status(400).send(error);
     }
 };
+exports.deleteReview = async (req, res) => {
+    try {
+      await Review_ratings.findByIdAndDelete(req.params.id);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  };

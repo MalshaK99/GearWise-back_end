@@ -1,17 +1,15 @@
 const Vehicle = require("../models/vehicle");
 const Customer = require('../models/customer');
 const Product = require("../models/product");
+const Appointment= require("../models/appoinment")
 const mongoose = require('mongoose');
 
-// Create a new vehicle
 exports.createVehicle = async (req, res) => {
-    console.log(req.body);
     const { vehicle_no, v_type, s_type, s_date, owner } = req.body;
 
     try {
-        // Fetch the customer details using the owner (customer ID)
+        // Validate the customer ID
         const customer = await Customer.findById(owner);
-
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }
@@ -22,8 +20,7 @@ exports.createVehicle = async (req, res) => {
             v_type,
             s_type,
             s_date,
-            cus_name: customer.name, // Include customer's name
-            owner
+            owner 
         });
 
         await vehicle.save();
@@ -60,24 +57,29 @@ exports.getVehicleById = async (req, res) => {
     }
 };
 
-
 exports.updateVehicleById = async (req, res) => {
     const { vehicle_no } = req.params;
     const { nextS_date, replacedParts } = req.body;
 
     try {
         const updatedFields = {};
-        
+
+        // Update the next service date in the Vehicle and related Appointment
         if (nextS_date) {
             updatedFields.nextS_date = nextS_date;
+
+            // Update the nextS_date in the Appointment collection
+            await Appointment.findOneAndUpdate(
+                { vrNo: vehicle_no },
+                { $set: { nextS_date: nextS_date } }
+            );
         }
 
-        if (replacedParts) {
-            updatedFields.replacedParts = replacedParts;
-
-            // Update the quantities of the replaced products
+        // Update the product quantities based on replaced parts
+        if (replacedParts && replacedParts.length > 0) {
             for (const part of replacedParts) {
                 const product = await Product.findById(part.productId);
+
                 if (product) {
                     // Check if the new quantity will be >= 0
                     const newQuantity = product.quantity - part.quantity;
@@ -93,7 +95,7 @@ exports.updateVehicleById = async (req, res) => {
         }
 
         const updatedVehicle = await Vehicle.findOneAndUpdate(
-            { vehicle_no:vehicle_no},
+            { vehicle_no: vehicle_no },
             { $set: updatedFields },
             { new: true }
         );
@@ -108,6 +110,7 @@ exports.updateVehicleById = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
 
 // Delete a vehicle by ID
 exports.deleteVehicleById = async (req, res) => {
