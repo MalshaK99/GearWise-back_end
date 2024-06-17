@@ -11,4 +11,8 @@ router.get('/viewappointment/:id', appointmentController.getappointment);
 
 //add appoinments
 router.post('/createappointment',appointmentController.createAppoinment);
+
+//cancel appointment
+router.put('/cancelappointmnet/:id',appointmentController.updateAppointmentStatus);
+
 module.exports = router;

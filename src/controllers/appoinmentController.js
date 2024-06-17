@@ -73,3 +73,21 @@ exports.getappointment = async (req, res) => {
           res.status(400).send(error)
       }
   };
+
+//cancel appointment
+  exports.updateAppointmentStatus = async (req, res) => {
+    const appointmentId = req.params.id;
+    const { status } = req.body;
+  
+    try {
+      const updatedAppointment = await Appointment.findByIdAndUpdate(appointmentId, { status: status }, { new: true });
+  
+      if (!updatedAppointment) {
+        return res.status(404).send({ message: 'Appointment not found' });
+      }
+  
+      res.status(200).send(updatedAppointment);
+    } catch (error) {
+      res.status(400).send({ message: 'Error updating appointment status', error });
+    }
+  };
