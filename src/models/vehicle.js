@@ -8,10 +8,7 @@ const vehicleSchema = new Schema({
         unique: true,
         required: true
     },
-    cus_name: {
-        type: String,
-        required: true
-    },
+   
     v_type: {
         type: String,
         required: true
@@ -24,10 +21,7 @@ const vehicleSchema = new Schema({
         type: Date,
         required: true
     },
-    nextS_date: {
-        type: Date,
-        default: null
-    },
+
     replacedParts: [
         {
             productId: {
