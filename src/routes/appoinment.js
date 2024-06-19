@@ -15,4 +15,7 @@ router.post('/createappointment',appointmentController.createAppoinment);
 //cancel appointment
 router.put('/cancelappointmnet/:id',appointmentController.updateAppointmentStatus);
 
+//reshedule appointment
+router.put('/resheduleappointmnet/:id',appointmentController.resheduleAppointment);
+
 module.exports = router;

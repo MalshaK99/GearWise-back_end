@@ -91,3 +91,21 @@ exports.getappointment = async (req, res) => {
       res.status(400).send({ message: 'Error updating appointment status', error });
     }
   };
+
+  //reshedule appointmnet
+  exports.resheduleAppointment = async (req, res) => {
+    const appointmentId = req.params.id;
+    const { timeSlot,date } = req.body;
+  
+    try {
+      const resheduleAppointment = await Appointment.findByIdAndUpdate(appointmentId, { timeSlot:timeSlot,date:date}, { new: true });
+  
+      if (!resheduleAppointment) {
+        return res.status(404).send({ message: 'Appointment not found' });
+      }
+  
+      res.status(200).send(resheduleAppointment);
+    } catch (error) {
+      res.status(400).send({ message: 'Error resheduling appointment ', error });
+    }
+  };
