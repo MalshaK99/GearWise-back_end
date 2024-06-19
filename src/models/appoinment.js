@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
+const createtime = new Date();
 
 const appointmentSchema = new Schema({
     customerId: {
@@ -35,6 +36,11 @@ const appointmentSchema = new Schema({
     date: {
         type: Date,
         required: true
+    },
+    createtime: {
+        type: Date,
+        require:true,
+        default: Date.now
     },
     nextS_date: {
         type: Date,
