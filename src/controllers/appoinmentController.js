@@ -42,6 +42,19 @@ exports.appoinmentCount = async (req, res) => {
       res.status(400).json({ error: error.message });
   }
 };
+
+// for rewarding
+exports.appoinmentCountforReward = async (req, res) => {
+  try {
+      const customerId = req.params.id;
+
+        const count = await Appointment.countDocuments({customerId:customerId});
+        res.status(200).json({ count });
+      } catch (error) {
+        res.status(500).json({ error: 'An error occurred while counting appointments.' });
+      }
+};
+
 // Create a new 
 exports.createAppoinment = async (req, res) => {
     console.log(req.body);
