@@ -46,8 +46,13 @@ const appointmentSchema = new Schema({
         default: getCurrentFormattedDate
     },
     nextS_date: {
-        type: String,
+        type: Date,
         default: null
+    },
+    t_alertStatus:{
+        type: String,
+        required: true,
+        default: "Pending"
     },
     status: {
         type: String,

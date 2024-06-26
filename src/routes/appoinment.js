@@ -2,9 +2,16 @@ const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appoinmentController');
 
+router.patch('/:vehicle_no', appointmentController.updateNextServiceDate);
+
+//alert using next service date
+router.get('/next_sdate',appointmentController.getAppointmentsByN_SDate);
+
 // Get appointments
 router.get('/', appointmentController.getAppointmentsByDate);
+
 router.get('/count', appointmentController.appoinmentCount);
+
 router.get('/appointmentcount/:id',appointmentController.appoinmentCountforReward);
 
 // view appointment for relevant user
