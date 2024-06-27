@@ -49,7 +49,7 @@ const appointmentSchema = new Schema({
         type: Date,
         default: null
     },
-    t_alertStatus:{
+    t_alertStatus:{ 
         type: String,
         required: true,
         default: "Pending"
