@@ -58,7 +58,7 @@ exports.createCustomer = async (req, res) => {
     }
 };
 
-// Toggle customer status
+// Toggle customer status(admin dash)
 exports.toggleCustomerStatus = async (req, res) => {
     try {
         const { customerId } = req.params;
