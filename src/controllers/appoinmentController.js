@@ -42,7 +42,7 @@ exports.getAppointmentsByDate = async (req, res) => {
       return res.status(400).json({ error: 'Date query parameter is required' });
     }
 
-    // Parse the incoming date string in 'YYYY-MM-DD' format
+    // seperate incoming date string in 'YYYY-MM-DD' format
     const [year, month, day] = date.split('-').map(Number);
 
     // Create a new Date object using the parsed components
