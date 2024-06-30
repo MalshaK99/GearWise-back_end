@@ -45,18 +45,6 @@ exports.fetchSuppliers = async (req, res) => {
     }
 };
 
-// Add customer (just to test)
-exports.createCustomer = async (req, res) => {
-    console.log(req.body);
-    const customer = new Customer(req.body);
-
-    try {
-        await customer.save();
-        res.status(201).send(customer);
-    } catch (error) {
-        res.status(400).send(error);
-    }
-};
 
 // Toggle customer status(admin dash)
 exports.toggleCustomerStatus = async (req, res) => {
@@ -87,6 +75,8 @@ exports.getCustomerCount = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
+
 
 // //add customer
 // router.post("/users",async(req,res)=>{
