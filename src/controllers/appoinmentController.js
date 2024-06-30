@@ -126,7 +126,7 @@ function formatDate(date) {
   return `${month}/${day}/${year}`;
 }
 
-
+//below are kasun's
 // for rewarding
 exports.appoinmentCountforReward = async (req, res) => {
   try {
