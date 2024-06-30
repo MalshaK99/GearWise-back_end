@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appoinmentController');
+  
 
+// update next service date
 router.patch('/:vehicle_no', appointmentController.updateNextServiceDate);
 
 //alert using next service date
