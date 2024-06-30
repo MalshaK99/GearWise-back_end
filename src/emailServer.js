@@ -3,12 +3,11 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = async ({ to, subject, text }) => {
     try {
-        // Configure your SMTP transporter
         const transporter = nodemailer.createTransport({
-            service: 'gmail', // e.g., 'Gmail'
+            service: 'gmail', 
             auth: {
                 user: 'gearwise24@gmail.com',
-                pass: ' lgvy xbef mafn nbwv' // Use the app password you generated
+                pass: ' lgvy xbef mafn nbwv' //  app password 
             }
         });
 
