@@ -1,13 +1,15 @@
 const Appointment = require('../models/appoinment');
 const { format } = require('date-fns');
-//get appointment by next S_date
+
+
+//get appointment by next S_date( for Time based alerts-no)
 exports.getAppointmentsByN_SDate = async (req, res) => {
   try {
     const { date } = req.query;
     if (!date) {
       return res.status(400).json({ error: 'Date query parameter is required' });
     }
-
+    //check whether date obj is valid
     const startDate = new Date(date);
     if (isNaN(startDate.getTime())) {
       return res.status(400).json({ error: 'Invalid date format' });
@@ -30,6 +32,8 @@ exports.getAppointmentsByN_SDate = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+
 //get appointmnet by date
 exports.getAppointmentsByDate = async (req, res) => {
   try {
