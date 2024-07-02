@@ -4,6 +4,8 @@ const Product = require("../models/product");
 const Appointment= require("../models/appoinment")
 const mongoose = require('mongoose');
 
+
+// add vehicle using mod dashboard
 exports.createVehicle = async (req, res) => {
     const { vehicle_no, v_type, s_type, s_date, owner } = req.body;
 
@@ -56,6 +58,7 @@ exports.getVehicleById = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
 
 exports.updateVehicleById = async (req, res) => {
     const { vehicle_no } = req.params;

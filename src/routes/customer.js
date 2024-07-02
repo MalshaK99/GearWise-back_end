@@ -10,8 +10,6 @@ router.get("/", customerController.getAllCustomers);
 //get suppliers
 router.get('/suppliers', customerController.fetchSuppliers);
 
-//if not relevant this del this(created to test)
-router.post("/customerreg", customerController.createCustomer);
 
 //activate-deactivate customers
 router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);
@@ -19,6 +17,8 @@ router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus
 //cus count
 router.get('/count', customerController.getCustomerCount);
 
+
+//hasa
 //add customers userPrifile
 router.post("/customers", customerController.addCustomer);
 
