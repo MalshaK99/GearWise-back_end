@@ -6,7 +6,7 @@ const Appointment = require("../models/appoinment");
 exports.getAllCustomers = async (req, res) => {
     try {
         // Get all customers
-        const customers = await Customer.find({ role: 'customer'}).lean();
+        const customers = await Customer.find({ role: 'customer' }).lean();
 
         // Fetch details for each customer
         const customersWithDetails = await Promise.all(
@@ -69,7 +69,7 @@ exports.toggleCustomerStatus = async (req, res) => {
 //cus count
 exports.getCustomerCount = async (req, res) => {
     try {
-        const count = await Customer.countDocuments({ status: "active" , role: 'customer'});
+        const count = await Customer.countDocuments({ status: "active", role: 'customer' });
         res.status(200).json({ count });
     } catch (error) {
         res.status(400).send(error);
@@ -119,11 +119,6 @@ exports.addCustomer = async (req, res) => {
 //     }
 // };
 
-
- 
- //get specific user detail for userprofile
- // and for appointment form details
- //exports.getOneCusprofile = async (req, res) => {
 
 //get specific user detail for userprofile
 exports.getOneCusprofile = async (req, res) => {
