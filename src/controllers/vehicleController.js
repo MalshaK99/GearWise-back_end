@@ -133,7 +133,7 @@ exports.deleteVehicleById = async (req, res) => {
 // add vehicle history(Appoinment details)
 exports.addHistory = async (req, res) => {
     console.log(req.body);
-    const history = new Appoinment(req.body);
+    const history = new Appointment(req.body);
 
 
     try {
@@ -170,7 +170,7 @@ exports.getHistory = async (req, res) => {
     const vrNo = req.params.vrNo; // Retrieve vehicle registration number from params
 
     try {
-        const history = await Appoinment.find({ vrNo: vrNo });
+        const history = await Appointment.find({ vrNo: vrNo });
 
         if (!history || history.length === 0) {
             return res.status(404).json({ message: 'No history found for this vehicle.' });
