@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
+const moment = require('moment');
 
 const Schema = mongoose.Schema;
+function getCurrentFormattedDate() {
+    return moment().format("MM/DD/yyyy");
+}
 
 const appointmentSchema = new Schema({
     customerId: {
@@ -33,15 +37,31 @@ const appointmentSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: String,
         required: true
+    },
+    createtime: {
+        type:String,
+        require:true,
+        default: getCurrentFormattedDate
+    },
+    nextS_date: {
+        type: Date,
+        default: null
+    },
+    t_alertStatus:{ 
+        type: String,
+        required: true,
+        default: "Pending"
     },
     status: {
         type: String,
         required: true,
         default: "Active"
     }
-});
+}
+
+);
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 

@@ -6,7 +6,7 @@ const productController = require("../controllers/productController");
 router.get("/", productController.getAllProducts);
 
 // Get all products supplied by a specific customer (supplier)
-router.get("/products-by-supplier", productController.getProductsBySupplierName); // Ensure this matches the controller function
+router.get("/products-by-supplier", productController.getProductsBySupplierName); 
 
 // Get a product by ID
 router.get("/:id", productController.getProductById);

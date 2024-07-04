@@ -10,4 +10,8 @@ router.post("/reviews", review_ratingController.addReview);
 
 //Get all review and ratings
 router.get("/reviews", review_ratingController.getReviews);
+
+//del rev
+router.delete('/reviews/:id', review_ratingController.deleteReview);
+
 module.exports = router;

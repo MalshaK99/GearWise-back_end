@@ -1,10 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appoinmentController');
+  
+
+// update next service date
+router.patch('/:vehicle_no', appointmentController.updateNextServiceDate);
+
+//alert using next service date
+router.get('/next_sdate',appointmentController.getAppointmentsByN_SDate);
 
 // Get appointments
 router.get('/', appointmentController.getAppointmentsByDate);
+
 router.get('/count', appointmentController.appoinmentCount);
+
+router.get('/appointmentcount/:id',appointmentController.appoinmentCountforReward);
 
 // view appointment for relevant user
 router.get('/viewappointment/:id', appointmentController.getappointment);
@@ -14,5 +24,8 @@ router.post('/createappointment',appointmentController.createAppoinment);
 
 //cancel appointment
 router.put('/cancelappointmnet/:id',appointmentController.updateAppointmentStatus);
+
+//reshedule appointment
+router.put('/resheduleappointmnet/:id',appointmentController.resheduleAppointment);
 
 module.exports = router;

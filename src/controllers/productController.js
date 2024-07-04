@@ -1,4 +1,4 @@
-const Product = require("../models/product"); // Ensure the correct path to your Product model
+const Product = require("../models/product"); 
 
 
 // Get all products

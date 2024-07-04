@@ -1,18 +1,17 @@
 const Vehicle = require("../models/vehicle");
 const Customer = require('../models/customer');
 const Product = require("../models/product");
-const Appoinment = require("../models/appoinment");
+const Appointment= require("../models/appoinment")
 const mongoose = require('mongoose');
 
-// Create a new vehicle
+
+// add vehicle using mod dashboard
 exports.createVehicle = async (req, res) => {
-    console.log(req.body);
     const { vehicle_no, v_type, s_type, s_date, owner } = req.body;
 
     try {
-        // Fetch the customer details using the owner (customer ID)
+        // Validate the customer ID
         const customer = await Customer.findById(owner);
-
         if (!customer) {
             return res.status(404).json({ message: 'Customer not found' });
         }
@@ -23,8 +22,7 @@ exports.createVehicle = async (req, res) => {
             v_type,
             s_type,
             s_date,
-            cus_name: customer.name, // Include customer's name
-            owner
+            owner 
         });
 
         await vehicle.save();
@@ -71,14 +69,19 @@ exports.updateVehicleById = async (req, res) => {
 
         if (nextS_date) {
             updatedFields.nextS_date = nextS_date;
+
+            // Update the nextS_date in the Appointment collection
+            await Appointment.findOneAndUpdate(
+                { vrNo: vehicle_no },
+                { $set: { nextS_date: nextS_date } }
+            );
         }
 
-        if (replacedParts) {
-            updatedFields.replacedParts = replacedParts;
-
-            // Update the quantities of the replaced products
+        // Update the product quantities based on replaced parts
+        if (replacedParts && replacedParts.length > 0) {
             for (const part of replacedParts) {
                 const product = await Product.findById(part.productId);
+
                 if (product) {
                     // Check if the new quantity will be >= 0
                     const newQuantity = product.quantity - part.quantity;
@@ -109,6 +112,7 @@ exports.updateVehicleById = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
 
 // Delete a vehicle by ID
 exports.deleteVehicleById = async (req, res) => {
