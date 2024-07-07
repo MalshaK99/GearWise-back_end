@@ -10,7 +10,7 @@ router.get("/", customerController.getAllCustomers);
 //get suppliers
 router.get('/suppliers', customerController.fetchSuppliers);
 // get customer
-router.get('/logincustomer', customerController.fetchCustomer);
+router.post('/logincustomer', customerController.fetchCustomer);
 
 //activate-deactivate customers
 router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);

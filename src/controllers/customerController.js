@@ -49,7 +49,7 @@ exports.fetchCustomer = async (req, res) => {
     const { email, password, } = req.body;
 
   try {
-    const check = await Customer.find({ email:email,password:password}); 
+    const check = await Customer.findOne({ email:email,password:password}); 
     if (!check) {
       res.json("notexist");
     } else {
@@ -128,9 +128,9 @@ exports.signupCustomer = async (req, res) => {
     console.log(customer.email)
         try {
         await customer.save();
-        res.status(201).send("Done");
+        res.status(201).send({ message: "Customer registration successful" });
     } catch (error) {
-        res.status(400).send("user exist");
+        res.status(400).send({ message: "User already exists" });
     }
     // const { email, password, username,profilephoto,address, gender,phoneno } = req.body;
     // const data={
