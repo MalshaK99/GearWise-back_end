@@ -44,6 +44,22 @@ exports.fetchSuppliers = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+//get customer email,pw to logging
+exports.fetchCustomer = async (req, res) => {
+    const { email, password, } = req.body;
+
+  try {
+    const check = await Customer.find({ email:email,password:password}); 
+    if (!check) {
+      res.json("notexist");
+    } else {
+      res.json("exist");
+    }
+  } catch (e) {
+    res.json("invalid url")
+
+  }
+};
 
 
 // Toggle customer status(admin dash)
@@ -105,6 +121,44 @@ exports.addCustomer = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
+//sigup
+exports.signupCustomer = async (req, res) => {
+    const customer = new Customer(req.body);
+    console.log(customer.email)
+        try {
+        await customer.save();
+        res.status(201).send("Done");
+    } catch (error) {
+        res.status(400).send("user exist");
+    }
+    // const { email, password, username,profilephoto,address, gender,phoneno } = req.body;
+    // const data={
+    //   email:email,
+    //   password:password,
+    //   username: username,
+    //   profilephoto:profilephoto,
+    //   address:address,
+    //   gender:gender,
+    //   phoneno:phoneno,
+    // }
+
+    // try {
+    //   const check = await Customer.find({email:email });
+    //     console.log(check)
+    //   if (check) {
+    //     res.json("exist"); 
+    //   } else {
+    //     res.json("notexist");
+    //     await customer.save();
+    //     res.status(201).send(customer);
+    //   }
+    // } catch (e) {
+    //   res.json("error")
+  
+    // };
+};
+
 
 // //get all customers userprofile
 // exports.getCustomerprofile = async (req, res) => {

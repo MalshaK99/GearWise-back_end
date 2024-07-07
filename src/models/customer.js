@@ -30,7 +30,7 @@ const CustomerSchema = new Schema({
     },
     profilePhoto: {
         type: String,
-        required: false
+        default:"2.jpg"
     },
     status:{
         type: String,

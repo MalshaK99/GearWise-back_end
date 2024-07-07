@@ -9,7 +9,8 @@ const customerController = require("../controllers/customerController");
 router.get("/", customerController.getAllCustomers);
 //get suppliers
 router.get('/suppliers', customerController.fetchSuppliers);
-
+// get customer
+router.get('/logincustomer', customerController.fetchCustomer);
 
 //activate-deactivate customers
 router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);
@@ -21,6 +22,9 @@ router.get('/count', customerController.getCustomerCount);
 //hasa
 //add customers userPrifile
 router.post("/customers", customerController.addCustomer);
+
+//signin
+router.post("/signup", customerController.signupCustomer);
 
 // Get all customer profiles
 // router.get("/customerspro", customerController.getCustomerprofile);
