@@ -53,7 +53,7 @@ exports.fetchCustomer = async (req, res) => {
     if (!check) {
       res.json("notexist");
     } else {
-      res.json("exist");
+      res.json({ status: "exist", customerId: check._id });
     }
   } catch (e) {
     res.json("invalid url")
