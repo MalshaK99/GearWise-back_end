@@ -51,7 +51,7 @@ exports.fetchCustomer = async (req, res) => {
   try {
     const check = await Customer.findOne({ email:email,password:password}); 
     if (!check) {
-      res.json("notexist");
+      res.json({status:"notexist"});
     } else {
       res.json({ status: "exist", customerId: check._id });
     }
