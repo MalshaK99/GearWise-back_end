@@ -21,6 +21,8 @@ router.get('/viewappointment/:id', appointmentController.getappointment);
 
 //add appoinments
 router.post('/createappointment',appointmentController.createAppoinment);
+// checking availability of time slot for creating appointment
+router.get('/createappointment',appointmentController.gettimeforappointment);
 
 //cancel appointment
 router.put('/cancelappointmnet/:id',appointmentController.updateAppointmentStatus);

@@ -144,8 +144,15 @@ exports.appoinmentCountforReward = async (req, res) => {
 };
 
 // Create a new 
+exports.gettimeforappointment = async (req, res) => {
+  const date = req.query.date;
+    const appointments = await Appointment.find({ date });
+    res.json(appointments);
+};
+
+
 exports.createAppoinment = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const appoinment = new Appointment(req.body);
 
     try {
