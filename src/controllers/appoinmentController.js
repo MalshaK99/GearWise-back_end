@@ -122,6 +122,46 @@ exports.appoinmentCount = async (req, res) => {
   }
 };
 
+// for analysis
+exports.appoinmentCountforanalysis = async (req, res) => {
+  try {
+    const now = new Date();
+    const currentDate = formatDate(now); // Format current date in MM/DD/YYYY
+
+    // Fetch appointments and filter those occurring after the current date
+    const appointments = await Appointment.find();
+    // for tommorow
+    const filteredAppointmentsfortomorow = appointments.filter(appointment => {
+      const appointmentDate = formatDate(new Date(appointment.date));
+      return appointmentDate > currentDate;
+    });
+
+    const appointmentDatestomorow = filteredAppointmentsfortomorow.map(appointment => formatDate(new Date(appointment.date)));
+
+    const counttomorow = filteredAppointmentsfortomorow.length;
+    // for today
+    const filteredAppointments = appointments.filter(appointment => {
+      const appointmentDate = formatDate(new Date(appointment.date));
+      return appointmentDate === currentDate;
+    });
+
+    const appointmentDates = filteredAppointments.map(appointment => formatDate(new Date(appointment.date)));
+
+    const count = filteredAppointments.length;
+
+    res.status(200).json({ 
+      count, 
+      appointmentDates,
+      counttomorow,
+      appointmentDatestomorow
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
+
 // Helper function to format date in MM/DD/YYYY format
 function formatDate(date) {
   const day = date.getDate().toString().padStart(2, '0');

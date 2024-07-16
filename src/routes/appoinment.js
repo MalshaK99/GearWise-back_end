@@ -13,6 +13,8 @@ router.get('/next_sdate',appointmentController.getAppointmentsByN_SDate);
 router.get('/', appointmentController.getAppointmentsByDate);
 
 router.get('/count', appointmentController.appoinmentCount);
+// for analysis
+router.get('/countforanalysis', appointmentController.appoinmentCountforanalysis);
 
 router.get('/appointmentcount/:id',appointmentController.appoinmentCountforReward);
 
