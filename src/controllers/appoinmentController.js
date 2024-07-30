@@ -130,30 +130,40 @@ exports.appoinmentCountforanalysis = async (req, res) => {
 
     // Fetch appointments and filter those occurring after the current date
     const appointments = await Appointment.find();
+
+
+
     // for tommorow
     const filteredAppointmentsfortomorow = appointments.filter(appointment => {
       const appointmentDate = formatDate(new Date(appointment.date));
       return appointmentDate > currentDate;
-    });
-
-    const appointmentDatestomorow = filteredAppointmentsfortomorow.map(appointment => formatDate(new Date(appointment.date)));
-
+    })
+    const appointmentDatestomorow = filteredAppointmentsfortomorow.map(appointment => ({
+      date: formatDate(new Date(appointment.date)),
+      serviceType: appointment.serviceType, 
+    }));
     const counttomorow = filteredAppointmentsfortomorow.length;
+
+
     // for today
     const filteredAppointments = appointments.filter(appointment => {
       const appointmentDate = formatDate(new Date(appointment.date));
       return appointmentDate === currentDate;
     });
-
-    const appointmentDates = filteredAppointments.map(appointment => formatDate(new Date(appointment.date)));
-
+    const appointmentDetails = filteredAppointments.map(appointment => ({
+      date: formatDate(new Date(appointment.date)),
+      serviceType: appointment.serviceType, 
+    }));
     const count = filteredAppointments.length;
 
     res.status(200).json({ 
       count, 
-      appointmentDates,
+      appointmentDetails,
       counttomorow,
-      appointmentDatestomorow
+      appointmentDatestomorow,
+      appointments,
+      filteredAppointmentsfortomorow,
+      filteredAppointments
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
