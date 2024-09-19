@@ -4,6 +4,28 @@ const Product = require("../models/product");
 const Appointment= require("../models/appoinment")
 const mongoose = require('mongoose');
 
+//fetch all vehicles
+exports.getAllVehicles = async (req, res) => {
+    try {
+        // Fetch all vehicles and populate the owner field with customer details
+        const vehicles = await Vehicle.find()
+            .populate({
+                path: 'owner',
+                select: 'name email'  // Fields to include from the Customer model
+            })
+            .exec();
+
+        if (vehicles.length > 0) {
+            return res.status(200).json(vehicles);
+        } else {
+            return res.status(404).json({ message: 'No vehicles found' });
+        }
+    } catch (error) {
+        console.error('Error fetching vehicles:', error);
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 
 // add vehicle using mod dashboard
 exports.createVehicle = async (req, res) => {
