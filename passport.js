@@ -69,7 +69,37 @@ module.exports = function(passport) {
     )
   );
 
- 
+  // JWT Strategy
+  // const cookieExtractor = (req) => {
+  //   let token = null;
+  //   if (req && req.cookies) {
+  //     token = req.cookies["access_token"];
+  //   }
+  //   return token;
+  // };
+
+  // passport.use(
+  //   new JwtStrategy(
+  //     {
+  //       jwtFromRequest: cookieExtractor,
+  //       secretOrKey: process.env.JWT_SECRET,
+  //     },
+  //     async (payload, done) => {
+  //       try {
+  //         const customer = await Customer.findById(payload.sub);
+  //         if (customer) {
+  //           return done(null, customer);
+  //         } else {
+  //           return done(null, false);
+  //         }
+  //       } catch (err) {
+  //         console.error("Error during JWT strategy authentication:", err);
+  //         return done(err, false);
+  //       }
+  //     }
+  //   )
+  // );
+
   // Serialize user
   passport.serializeUser((user, done) => {
     done(null, user.customer.id);  // Assuming the user object has a customer field
