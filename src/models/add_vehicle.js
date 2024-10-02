@@ -36,6 +36,6 @@ const add_vehicleSchema = new Schema({
 
 );
 
-const Add_VehicleSchema = mongoose.model("Add_VehicleSchema", add_vehicleSchema);
+const Add_Vehicle = mongoose.model("Add_Vehicle", add_vehicleSchema);
 
-module.exports = Add_VehicleSchema;
+module.exports = Add_Vehicle;

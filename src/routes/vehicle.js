@@ -23,6 +23,10 @@ router.post("/history", vehicleController.addHistory);
 //get vehicle history(specific)
 router.get("/history/:vrNo", vehicleController.getHistory);
 
+//Add new vehicle (in profile)
+router.post("/newVehicle", vehicleController.addNewVehicle);
+
+
 //Add vehicle and used products
 // router.post('/add-vehicle', vehicleController.addVehicleWithProducts);
 
