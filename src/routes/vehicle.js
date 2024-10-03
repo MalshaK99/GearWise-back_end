@@ -4,7 +4,8 @@ const vehicleController = require("../controllers/vehicleController");
 
 // Create a new Vehicle
 router.post("/", vehicleController.createVehicle);
-
+//fetch all vehicles
+router.get("/",vehicleController.getAllVehicles);
 // Get all customers
 router.get("/customers", vehicleController.getCustomers);
 

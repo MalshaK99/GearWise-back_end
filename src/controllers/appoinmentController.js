@@ -1,7 +1,29 @@
 const Appointment = require('../models/appoinment');
 const { format } = require('date-fns');
 
+//update alert status
+exports.alertStatus=async(req,res)=>{
+  const { appointmentId } = req.body;
 
+  try {
+    // Update the alert status of the appointment to 'Sent'
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { t_alertStatus: 'Sent' },
+      { new: true }
+    );
+
+    if (!updatedAppointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Return success response with the updated appointment
+    res.status(200).json({ message: 'Alert status updated', updatedAppointment });
+  } catch (error) {
+    console.error('Error updating alert status', error);
+    res.status(500).json({ error: 'Error updating alert status' });
+  }
+}
 //get appointment by next S_date( for Time based alerts-no)
 exports.getAppointmentsByN_SDate = async (req, res) => {
   try {
@@ -99,7 +121,26 @@ exports.updateNextServiceDate = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
   }
 };
+exports.appoinmentCount = async (req, res) => {
+  try {
+    const now = new Date();
+    const currentDate = formatDate(now); // Format current date in MM/DD/YYYY
 
+    // Fetch appointments and filter those occurring after the current date
+    const appointments = await Appointment.find();
+
+    const filteredAppointments = appointments.filter(appointment => {
+      const appointmentDate = formatDate(new Date(appointment.date));
+      return appointmentDate > currentDate;
+    });
+
+    const count = filteredAppointments.length;
+
+    res.status(200).json({ count });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 //count
 exports.appoinmentCount = async (req, res) => {
   try {
