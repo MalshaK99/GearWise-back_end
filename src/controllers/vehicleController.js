@@ -2,6 +2,7 @@ const Vehicle = require("../models/vehicle");
 const Customer = require('../models/customer');
 const Product = require("../models/product");
 const Appointment= require("../models/appoinment")
+const Add_Vehicle = require("../models/add_vehicle")
 const mongoose = require('mongoose');
 
 //fetch all vehicles
@@ -213,6 +214,21 @@ exports.getHistory = async (req, res) => {
     } catch (error) {
         console.error('Error fetching vehicle history:', error);
         res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+ 
+// add new vehicle   //has
+exports.addNewVehicle = async (req, res) => {
+    console.log(req.body);
+    const newVehicle = new Add_Vehicle(req.body);
+
+
+    try {
+        await newVehicle.save();
+        res.status(201).send(newVehicle);
+    } catch (error) {
+        res.status(400).send(error);
     }
 };
 
