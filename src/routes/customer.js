@@ -3,31 +3,28 @@
 const express = require("express");
 const router = express.Router();
 const customerController = require("../controllers/customerController");
-const authenticateToken = require("../middleware/auth");
 
+ 
 // Get all customers
 router.get("/", customerController.getAllCustomers);
 //get suppliers
-router.get("/suppliers", customerController.fetchSuppliers);
+router.get('/suppliers', customerController.fetchSuppliers);
+// get customer
+router.post('/logincustomer', customerController.fetchCustomer);
 
 //activate-deactivate customers
-router.put(
-  "/:customerId/toggle-status",
-  customerController.toggleCustomerStatus
-);
+router.put('/:customerId/toggle-status', customerController.toggleCustomerStatus);
 
 //cus count
-router.get("/count", customerController.getCustomerCount);
+router.get('/count', customerController.getCustomerCount);
+
 
 //hasa
 //add customers userPrifile
 router.post("/customers", customerController.addCustomer);
 
 //signin
-router.post("/signup", customerController.register);
-
-//login
-router.post("/login", customerController.login);
+router.post("/signup", customerController.signupCustomer);
 
 // Get all customer profiles
 // router.get("/customerspro", customerController.getCustomerprofile);
@@ -38,5 +35,7 @@ router.get("/customerspro/:id", customerController.getOneCusprofile);
 
 //Update user profile
 router.put("/customerspro/:id", customerController.updateProfile);
+
+
 
 module.exports = router;
