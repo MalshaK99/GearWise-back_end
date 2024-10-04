@@ -232,6 +232,27 @@ exports.addNewVehicle = async (req, res) => {
     }
 };
 
+// get vehicle info for make appointment
+exports.getvehicleinfo = async (req, res) => {
+
+    //  router.get("/users/:id",async(req,res)=>{
+    // const _id = req.params.id;
+    const _id = "665e144096c5017136fb33a0";
+
+
+    try {
+        // const cusvehicleinfo = await Add_Vehicle.findById(_id)
+        const cusvehicleinfo = await Add_Vehicle.find()
+
+        if (!cusvehicleinfo) {
+            return res.status(404).send
+        }
+        res.status(201).send(cusvehicleinfo)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+};
+
 // add vehicle and product details for the history
 // exports.addVehicleWithProducts = async (req, res) => {
 //     try {

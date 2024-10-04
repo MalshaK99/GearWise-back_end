@@ -175,6 +175,7 @@ exports.signupCustomer = async (req, res) => {
 
 
 //get specific user detail for userprofile
+// and for make appointment
 exports.getOneCusprofile = async (req, res) => {
 
     //  router.get("/users/:id",async(req,res)=>{
