@@ -5,6 +5,11 @@ const Schema = mongoose.Schema;
  
 
 const add_vehicleSchema = new Schema({
+    customerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Customer',
+        required: true
+    },
     
     vehicleType: {
         type: String,
