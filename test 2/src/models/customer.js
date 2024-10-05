@@ -6,9 +6,7 @@ const Schema = mongoose.Schema;
 const CustomerSchema = new Schema({
   name: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   email: {
     type: String,
@@ -17,23 +15,21 @@ const CustomerSchema = new Schema({
   },
   phone: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   gender: {
     type: String,
     required: false,
+    default: '',
   },
   address: {
     type: String,
     required: false,
+    default: '',
   },
   password: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   profilePhoto: {
     type: String,
@@ -48,30 +44,43 @@ const CustomerSchema = new Schema({
     default: "customer",
   },
   vehicle: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Vehicle",
-  },
-  googleId: {
-    type: String,
-    unique: true,
-    sparse: true, // Allows multiple null values
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
 });
 
-// Hash password before saving the document
-CustomerSchema.pre("save", async function(next) {
+// Pre-save hook to hash the password
+CustomerSchema.pre("save", async function (next) {
   if (this.isModified("password") || this.isNew) {
-    if (this.password) {
+    try {
       const salt = await bcrypt.genSalt(10);
-      this.password = await bcrypt.hash(this.password, salt);
+      const hashedPassword = await bcrypt.hash(this.password, salt);
+      this.password = hashedPassword;
+    } catch (error) {
+      return next(error);
     }
   }
   next();
 });
+
+// Method to compare passwords
+CustomerSchema.methods.comparePassword = async function (candidatePassword) {
+  try {
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    return isMatch;
+  } catch (error) {
+    throw new Error("Error comparing password: " + error.message);
+  }
+};
 
 // Check if the model already exists to prevent overwriting
 const Customer = mongoose.models.Customer || mongoose.model("Customer", CustomerSchema);

@@ -40,7 +40,7 @@ class CustomerService {
     } catch (error) {
       throw error;
     }
-  }
+  }  
 }
 
 module.exports = CustomerService;

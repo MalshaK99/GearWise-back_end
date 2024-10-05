@@ -1,9 +1,5 @@
 const router = require("express").Router();
 const passport = require("passport");
-const JWT = require("jsonwebtoken");
-const express = require("express");
-
-
 
 router.get("/login/success", (req, res) => {
   if (req.user) {
@@ -38,33 +34,5 @@ router.get("/logout", (req, res) => {
   req.logout();
   res.redirect(process.env.CLIENT_URL);
 });
-
-//jwt  foir local authentication
-const signToken = (userID) => {
-  return JWT.sign(
-    {
-      iss: "Movie.log",
-      sub: userID,
-    },
-    process.env.SECRET,
-    { expiresIn: "1h" }
-  );
-};
-
-router
-  .route("/")
-  .post(passport.authenticate("local", { session: false }), (req, res) => {
-    if (req.isAuthenticated()) {
-      const { _id, first_name } = req.user;
-
-      const token = signToken(_id);
-      res.cookie("access_token", token, { httpOnly: true, sameSite: true });
-
-      res.status(200).json({
-        isAuthenticated: true,
-        user: first_name
-      });
-    }
-  });
 
 module.exports = router;

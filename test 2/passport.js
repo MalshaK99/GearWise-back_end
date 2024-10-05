@@ -1,3 +1,19 @@
+import * as passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+require('dotenv').config();
+
+
+// Ensure that the environment variables are being passed
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID, // Check if this is returning undefined
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Ensure it's properly defined
+  callbackURL: "http://localhost:3000/auth/google/callback" // Ensure your callback URL is correct
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // Use the user profile as needed
+    return done(null, profile);
+  }
+));
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
@@ -7,10 +23,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 // Assuming the Customer model is located in the following path
-const Customer = require("./src/models/Customer"); // Update the path if necessary
+const Customer = require("./src/models/customer"); // Update the path if necessary
 
 module.exports = function(passport) {
-  // Local Strategy for email/password login
+  // Local Strategy
   passport.use(
     new LocalStrategy({ usernameField: "email" }, async (email, password, done) => {
       try {
@@ -22,13 +38,14 @@ module.exports = function(passport) {
         if (!isMatch) {
           return done(null, false, { message: "Incorrect password." });
         }
-
-        // Generate JWT token for the customer upon successful login
-        const token = jwt.sign({ sub: customer.id }, process.env.JWT_SECRET, {
-          expiresIn: '1h',
+        
+        // Generate JWT token
+        const token = jwt.sign({ sub: customer.id, email: customer.email }, process.env.JWT_SECRET, {
+          expiresIn: '1h'
         });
 
-        // Pass customer and token for session handling
+        
+        // Store token in session
         return done(null, { customer, token });
       } catch (err) {
         return done(err);
@@ -56,13 +73,9 @@ module.exports = function(passport) {
               profilePhoto: profile.photos[0].value,
             });
           }
-
-          // Generate JWT token for the customer upon successful login
           const token = jwt.sign({ sub: customer.id }, process.env.JWT_SECRET, {
             expiresIn: '1h'
           });
-
-          // Pass customer and token for session handling
           return cb(null, { customer, token });
         } catch (err) {
           console.error("Error during Google strategy authentication:", err);
@@ -72,47 +85,43 @@ module.exports = function(passport) {
     )
   );
 
-  // JWT Strategy for protecting routes
-  const cookieExtractor = (req) => {
-    let token = null;
-    if (req && req.cookies) {
-      token = req.cookies["access_token"];
-    }
-    return token;
-  };
+  // JWT Strategy
+  // const cookieExtractor = (req) => {
+  //   let token = null;
+  //   if (req && req.cookies) {
+  //     token = req.cookies["access_token"];
+  //   }
+  //   return token;
+  // };
 
-  passport.use(
-    new JwtStrategy(
-      {
-        jwtFromRequest: cookieExtractor,
-        secretOrKey: process.env.JWT_SECRET,
-      },
-      async (payload, done) => {
-        try {
-          const customer = await Customer.findById(payload.sub);
-          if (customer) {
-            return done(null, customer);
-          } else {
-            return done(null, false);
-          }
-        } catch (err) {
-          console.error("Error during JWT strategy authentication:", err);
-          return done(err, false);
-        }
-      }
-    )
-  );
+  // passport.use(
+  //   new JwtStrategy(
+  //     {
+  //       jwtFromRequest: cookieExtractor,
+  //       secretOrKey: process.env.JWT_SECRET,
+  //     },
+  //     async (payload, done) => {
+  //       try {
+  //         const customer = await Customer.findById(payload.sub);
+  //         if (customer) {
+  //           return done(null, customer);
+  //         } else {
+  //           return done(null, false);
+  //         }
+  //       } catch (err) {
+  //         console.error("Error during JWT strategy authentication:", err);
+  //         return done(err, false);
+  //       }
+  //     }
+  //   )
+  // );
 
-  // Serialize user into the session
+  // Serialize user
   passport.serializeUser((user, done) => {
-    if (user.customer) {
-      done(null, user.customer.id); // Google strategy returns { customer, token }
-    } else {
-      done(null, user.id); // Local strategy returns customer object directly
-    }
+    done(null, user.customer.id);  // Assuming the user object has a customer field
   });
 
-  // Deserialize user from the session
+  // Deserialize user
   passport.deserializeUser(async (id, done) => {
     try {
       const customer = await Customer.findById(id);
@@ -122,3 +131,9 @@ module.exports = function(passport) {
     }
   });
 };
+
+// For session handling
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+export default passport;
