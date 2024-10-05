@@ -31,6 +31,10 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PATCH,PUT,DELETE",
+    credentials: true,
   })
 );
 

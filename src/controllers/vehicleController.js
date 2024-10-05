@@ -4,6 +4,28 @@ const Product = require("../models/product");
 const Appointment= require("../models/appoinment")
 const mongoose = require('mongoose');
 
+//fetch all vehicles
+exports.getAllVehicles = async (req, res) => {
+    try {
+        // Fetch all vehicles and populate the owner field with customer details
+        const vehicles = await Vehicle.find()
+            .populate({
+                path: 'owner',
+                select: 'name email'  // Fields to include from the Customer model
+            })
+            .exec();
+
+        if (vehicles.length > 0) {
+            return res.status(200).json(vehicles);
+        } else {
+            return res.status(404).json({ message: 'No vehicles found' });
+        }
+    } catch (error) {
+        console.error('Error fetching vehicles:', error);
+        return res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 
 // add vehicle using mod dashboard
 exports.createVehicle = async (req, res) => {
@@ -63,56 +85,67 @@ exports.getVehicleById = async (req, res) => {
 exports.updateVehicleById = async (req, res) => {
     const { vehicle_no } = req.params;
     const { nextS_date, replacedParts } = req.body;
-
+  
     try {
-        const updatedFields = {};
-
-        if (nextS_date) {
-            updatedFields.nextS_date = nextS_date;
-
-            // Update the nextS_date in the Appointment collection
-            await Appointment.findOneAndUpdate(
-                { vrNo: vehicle_no },
-                { $set: { nextS_date: nextS_date } }
-            );
-        }
-
-        // Update the product quantities based on replaced parts
-        if (replacedParts && replacedParts.length > 0) {
-            for (const part of replacedParts) {
-                const product = await Product.findById(part.productId);
-
-                if (product) {
-                    // Check if the new quantity will be >= 0
-                    const newQuantity = product.quantity - part.quantity;
-                    if (newQuantity < 0) {
-                        return res.status(400).send({ message: `Quantity cannot be less than 0 for product ${product.name}` });
-                    }
-                    // Update only the quantity
-                    await Product.findByIdAndUpdate(part.productId, { $set: { quantity: newQuantity } });
-                } else {
-                    return res.status(404).send({ message: `Product with id ${part.productId} not found` });
-                }
-            }
-        }
-
-        const updatedVehicle = await Vehicle.findOneAndUpdate(
-            { vehicle_no: vehicle_no },
-            { $set: updatedFields },
-            { new: true }
+      const updatedFields = {};
+  
+      // If next service date is provided, update nextS_date in the Vehicle and Appointment collections
+      if (nextS_date) {
+        updatedFields.nextS_date = nextS_date;
+  
+        // Update nextS_date in the Appointment collection
+        await Appointment.findOneAndUpdate(
+          { vrNo: vehicle_no },
+          { $set: { nextS_date: nextS_date } }
         );
-
-        if (!updatedVehicle) {
-            return res.status(404).send({ message: 'Vehicle not found' });
+      }
+  
+      // If replaced parts are provided, update product quantities and add parts to the Vehicle's replacedParts array
+      if (replacedParts && replacedParts.length > 0) {
+        for (const part of replacedParts) {
+          const product = await Product.findById(part.productId);
+  
+          if (product) {
+            // Check if the new quantity will be >= 0
+            const newQuantity = product.quantity - part.quantity;
+            if (newQuantity < 0) {
+              return res.status(400).send({ message: `Quantity cannot be less than 0 for product ${product.name}` });
+            }
+  
+            // Update product quantity
+            await Product.findByIdAndUpdate(part.productId, {
+              $set: { quantity: newQuantity }
+            });
+  
+            console.log(`Updated quantity for product ${product.name} (ID: ${part.productId}) to ${newQuantity}`);
+          } else {
+            return res.status(404).send({ message: `Product with id ${part.productId} not found` });
+          }
         }
-
-        res.status(200).send(updatedVehicle);
+  
+        // Add the replaced parts to the vehicle's replacedParts array
+        updatedFields.replacedParts = replacedParts;
+      }
+  
+      // Update vehicle data with nextS_date and replacedParts
+      const updatedVehicle = await Vehicle.findOneAndUpdate(
+        { vehicle_no: vehicle_no },
+        { $set: updatedFields },
+        { new: true }
+      );
+  
+      if (!updatedVehicle) {
+        return res.status(404).send({ message: 'Vehicle not found' });
+      }
+  
+      res.status(200).send(updatedVehicle);
     } catch (error) {
-        console.error('Error updating vehicle fields:', error);
-        res.status(400).send(error);
+      console.error('Error updating vehicle fields:', error);
+      res.status(400).send({ message: 'Error updating vehicle', error });
     }
-};
-
+    
+  };
+  
 
 // Delete a vehicle by ID
 exports.deleteVehicleById = async (req, res) => {

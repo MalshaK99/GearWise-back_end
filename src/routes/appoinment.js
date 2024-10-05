@@ -8,7 +8,8 @@ router.patch('/:vehicle_no', appointmentController.updateNextServiceDate);
 
 //alert using next service date
 router.get('/next_sdate',appointmentController.getAppointmentsByN_SDate);
-
+//update next service date alert status
+router.put('/alertStatus',appointmentController.alertStatus);
 // Get appointments
 router.get('/', appointmentController.getAppointmentsByDate);
 
