@@ -236,20 +236,20 @@ exports.addNewVehicle = async (req, res) => {
 exports.getvehicleinfo = async (req, res) => {
 
     //  router.get("/users/:id",async(req,res)=>{
-    // const _id = req.params.id;
-    const _id = "665e144096c5017136fb33a0";
+            // const _id = "665e144096c5017136fb33a0";
 
-
+    const customerId = req.params.id;
+    // console.log("cusid:",customerId);
     try {
-        // const cusvehicleinfo = await Add_Vehicle.findById(_id)
-        const cusvehicleinfo = await Add_Vehicle.find()
+        const cusvehicleinfo = await Add_Vehicle.find({ customerId: customerId });
+        // const cusvehicleinfo = await Add_Vehicle.find()
 
         if (!cusvehicleinfo) {
-            return res.status(404).send
+            return res.status(404).send({ message: "Vehicle not found" });
         }
         res.status(201).send(cusvehicleinfo)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({ message: "Error fetching vehicle info", error });
     }
 };
 

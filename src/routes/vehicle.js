@@ -28,7 +28,8 @@ router.get("/history/:vrNo", vehicleController.getHistory);
 router.post("/newVehicle", vehicleController.addNewVehicle);
 
 //get vehicle details for make appintment
-router.get("/getvehicleinfo", vehicleController.getvehicleinfo);
+router.get("/getvehicleinfo/:id", vehicleController.getvehicleinfo);
+
 
 //Add vehicle and used products
 // router.post('/add-vehicle', vehicleController.addVehicleWithProducts);
