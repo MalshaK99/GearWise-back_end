@@ -1,7 +1,63 @@
-const Customer = require("../models/customer");
+const Customer =require("../models/customer");
 const Vehicle = require("../models/vehicle");
 const Appointment = require("../models/appoinment");
+const customerService = require("../services/customerService");
 
+const bcrypt = require("bcrypt");
+
+exports.register = async (req, res, next) => {
+  try {
+    const { name, email, phone, password } = req.body;
+
+    const successRes = await customerService.registerCustomer(
+      name,
+      email,
+      phone,
+      password
+    );
+
+    if (successRes.success) {
+      res.status(201).json({ status: true, message: successRes.message });
+    } else {
+      res.status(400).json({ status: false, error: successRes.message });
+    }
+  } catch (error) {
+    console.error("Error during registration:", error);
+    res.status(500).json({ status: false, error: "Internal Server Error" });
+  }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log("Received login request for:", email);
+
+    const customer = await customerService.checkCustomer(email);
+    if (!customer) {
+      console.log("Customer not found for email:", email);
+      return res.status(401).json({ status: false, error: "Invalid email or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, customer.password);
+    if (!isMatch) {
+      console.log("Password mismatch for email:", email);
+      return res.status(401).json({ status: false, error: "Invalid email or password" });
+    }
+
+    const tokenData = {
+      _id: customer._id,
+      email: customer.email,
+      name: customer.name,
+    };
+    const token = await customerService.generateToken(tokenData, process.env.JWT_SECRET, "1h");
+
+    console.log("Login successful for email:", email);
+    res.status(200).json({ status: true, token: token });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ status: false, error: "Internal Server Error" });
+  }
+};
 
 exports.getAllCustomers = async (req, res) => {
     try {
@@ -45,20 +101,29 @@ exports.fetchSuppliers = async (req, res) => {
     }
 };
 //get customer email,pw to logging
+// Fetch customer email and password for login
 exports.fetchCustomer = async (req, res) => {
-    const { email, password, } = req.body;
+    const { email, password } = req.body;
+  
+    try {
+        const customer = await Customer.findOne({ email: email });
 
-  try {
-    const check = await Customer.findOne({ email:email,password:password}); 
-    if (!check) {
-      res.json({status:"notexist"});
-    } else {
-      res.json({ status: "exist", customerId: check._id });
+        if (!customer) {
+            return res.json({ status: "notexist" }); // No customer with that email
+        }
+
+        // Compare password with hashed password
+        const validPassword = await bcrypt.compare(password, customer.password);
+        if (!validPassword) {
+            return res.json({ status: "notexist" }); // Incorrect password
+        }
+
+        // If both email and password match, login success
+        res.json({ status: "exist", customerId: customer._id });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Internal server error" });
     }
-  } catch (e) {
-    res.json("invalid url")
-
-  }
 };
 
 
