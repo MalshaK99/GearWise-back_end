@@ -10,11 +10,13 @@ class CustomerService {
         return { success: false, message: "Customer already exists" };
       }
 
+      // Hash the password before saving
+      const hashedPassword = await bcrypt.hash(password, 10);
       const newCustomer = new Customer({
         name,
         email,
         phone,
-        password
+        password: hashedPassword
       });
 
       await newCustomer.save();
@@ -40,7 +42,7 @@ class CustomerService {
     } catch (error) {
       throw error;
     }
-  }  
+  } 
 }
 
 module.exports = CustomerService;

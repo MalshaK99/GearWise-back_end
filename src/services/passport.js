@@ -1,6 +1,6 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const Customer = require("../../test 2/src/models/customer"); // Adjust the path as needed
+const Customer = require("../models/customer"); // Adjust the path as needed
 const JwtStrategy = require("passport-jwt").Strategy;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -10,8 +10,8 @@ require('dotenv').config();
 passport.use(
   new GoogleStrategy( 
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
       callbackURL: "http://localhost:4005/api/auth/google/callback",
       scope: ["profile", "email"],
     },

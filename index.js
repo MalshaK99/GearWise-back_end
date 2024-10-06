@@ -20,8 +20,9 @@ const appointmentRouter = require("./src/routes/appoinment");
 const reviewRouter = require("./src/routes/review_ratings");
 const cookieSession = require("cookie-session");
 const authRoute = require("./src/routes/auth");
-const path = require("path");
-const sendEmail = require("./src/emailServer");
+// const path = require("path");
+// const sendEmail = require("./src/emailServer");
+
 
 const app = express();
 

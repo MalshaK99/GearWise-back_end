@@ -1,3 +1,19 @@
+import * as passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+require('dotenv').config();
+
+
+// Ensure that the environment variables are being passed
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID, // Check if this is returning undefined
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET, // Ensure it's properly defined
+  callbackURL: "http://localhost:3000/auth/google/callback" // Ensure your callback URL is correct
+  },
+  (accessToken, refreshToken, profile, done) => {
+    // Use the user profile as needed
+    return done(null, profile);
+  }
+));
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
@@ -115,3 +131,9 @@ module.exports = function(passport) {
     }
   });
 };
+
+// For session handling
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+export default passport;
