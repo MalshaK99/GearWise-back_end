@@ -255,7 +255,7 @@ exports.updateMyVehicle = async (req, res) => {
     const _id = req.params.id;
 
     try {
-        const updated_MyVehicle = await Customer.findByIdAndUpdate(_id, req.body, { new: true })
+        const updated_MyVehicle = await Add_Vehicle.findByIdAndUpdate(_id, req.body, { new: true })
 
         if (!updated_MyVehicle) {
             return res.status(404).send()
