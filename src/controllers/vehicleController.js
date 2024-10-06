@@ -248,6 +248,25 @@ exports.deleteAddedMyVehicle = async (req, res) => {
     }
 };
 
+//Update Added vehicle in (My vehicle)
+exports.updateMyVehicle = async (req, res) => {
+
+     
+    const _id = req.params.id;
+
+    try {
+        const updated_MyVehicle = await Customer.findByIdAndUpdate(_id, req.body, { new: true })
+
+        if (!updated_MyVehicle) {
+            return res.status(404).send()
+        }
+
+        res.status(200).send(updated_MyVehicle)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+};
+
 
 // get vehicle info for make appointment
 exports.getvehicleinfo = async (req, res) => {
