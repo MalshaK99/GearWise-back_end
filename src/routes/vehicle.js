@@ -24,8 +24,11 @@ router.post("/history", vehicleController.addHistory);
 //get vehicle history(specific)
 router.get("/history/:vrNo", vehicleController.getHistory);
 
-//Add new vehicle (in profile)
+//Add new vehicle (in My Vehicle profile)
 router.post("/newVehicle", vehicleController.addNewVehicle);
+
+//Delete Added vehicles in (My Vehicle) by ID
+router.delete("/myVehicle/:id", vehicleController.deleteAddedMyVehicle);
 
 //get vehicle details for make appintment
 router.get("/getvehicleinfo/:id", vehicleController.getvehicleinfo);
