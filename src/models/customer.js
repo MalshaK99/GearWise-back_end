@@ -22,11 +22,11 @@ const CustomerSchema = new Schema({
   },
   gender: {
     type: String,
-    required: false,
+    required: true,
   },
   address: {
     type: String,
-    required: false,
+    required: true,
   },
   password: {
     type: String,
