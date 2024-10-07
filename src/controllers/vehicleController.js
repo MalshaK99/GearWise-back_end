@@ -218,7 +218,7 @@ exports.getHistory = async (req, res) => {
 };
 
  
-// add new vehicle   //has
+// add new vehicle to (My Vehicle) //has
 exports.addNewVehicle = async (req, res) => {
     console.log(req.body);
     const newVehicle = new Add_Vehicle(req.body);
@@ -231,6 +231,23 @@ exports.addNewVehicle = async (req, res) => {
         res.status(400).send(error);
     }
 };
+
+
+//Delete Added vehicles in (My Vehicle)
+exports.deleteAddedMyVehicle = async (req, res) => {
+    const _id = req.params.id;
+
+    try {
+        const deleteMyVehicle = await Add_Vehicle.findByIdAndDelete(_id);
+        if (!deleteMyVehicle) {
+            return res.status(404).send();
+        }
+        res.status(200).send(deleteMyVehicle);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+};
+
 
 // get vehicle info for make appointment
 exports.getvehicleinfo = async (req, res) => {
