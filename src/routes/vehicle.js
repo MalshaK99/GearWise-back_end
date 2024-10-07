@@ -30,6 +30,9 @@ router.post("/newVehicle", vehicleController.addNewVehicle);
 //Delete Added vehicles in (My Vehicle) by ID
 router.delete("/myVehicle/:id", vehicleController.deleteAddedMyVehicle);
 
+//Update Added vehicle in (My vehicle)
+router.put("/myVehicle/:id", vehicleController.updateMyVehicle);
+
 //get vehicle details for make appintment
 router.get("/getvehicleinfo/:id", vehicleController.getvehicleinfo);
 
