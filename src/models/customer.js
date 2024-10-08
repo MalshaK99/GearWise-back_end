@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const Schema = mongoose.Schema;
 
 const CustomerSchema = new Schema({
   name: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   email: {
     type: String,
@@ -16,23 +15,21 @@ const CustomerSchema = new Schema({
   },
   phone: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   gender: {
     type: String,
     required: false,
+    default: '',
   },
   address: {
     type: String,
     required: false,
+    default: '',
   },
   password: {
     type: String,
-    required: function() {
-      return !this.googleId; // Required only if googleId is not present
-    },
+    required: true,
   },
   profilePhoto: {
     type: String,
@@ -45,9 +42,9 @@ const CustomerSchema = new Schema({
   role: {
     type: String,
     default: "customer",
-  },    
+  },
   vehicle: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Vehicle",
   },
   createdAt: {

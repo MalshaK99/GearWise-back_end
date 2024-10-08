@@ -3,61 +3,33 @@ const Vehicle = require("../models/vehicle");
 const Appointment = require("../models/appoinment");
 const customerService = require("../services/customerService");
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
+
 
 exports.register = async (req, res, next) => {
-  try {
-    const { name, email, phone, password } = req.body;
-
-    const successRes = await customerService.registerCustomer(
-      name,
+    try {
+      const { name, email, phone, password } = req.body;
+  
+      const successRes = await customerService.registerCustomer(
+        name,
       email,
       phone,
+      gender,
+      address,
       password
-    );
-
-    if (successRes.success) {
-      res.status(201).json({ status: true, message: successRes.message });
-    } else {
-      res.status(400).json({ status: false, error: successRes.message });
+      );
+  
+      if (successRes.success) {
+        res.status(201).json({ status: true, message: successRes.message });
+      } else {
+        res.status(400).json({ status: false, error: successRes.message });
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      res.status(500).json({ status: false, error: "Internal Server Error" });
     }
-  } catch (error) {
-    console.error("Error during registration:", error);
-    res.status(500).json({ status: false, error: "Internal Server Error" });
-  }
-};
+  };
 
-exports.login = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    console.log("Received login request for:", email);
-
-    const customer = await customerService.checkCustomer(email);
-    if (!customer) {
-      console.log("Customer not found for email:", email);
-      return res.status(401).json({ status: false, error: "Invalid email or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, customer.password);
-    if (!isMatch) {
-      console.log("Password mismatch for email:", email);
-      return res.status(401).json({ status: false, error: "Invalid email or password" });
-    }
-
-    const tokenData = {
-      _id: customer._id,
-      email: customer.email,
-      name: customer.name,
-    };
-    const token = await customerService.generateToken(tokenData, process.env.JWT_SECRET, "1h");
-
-    console.log("Login successful for email:", email);
-    res.status(200).json({ status: true, token: token });
-  } catch (error) {
-    console.error("Login Error:", error);
-    res.status(500).json({ status: false, error: "Internal Server Error" });
-  }
-};
 
 exports.getAllCustomers = async (req, res) => {
     try {
@@ -91,6 +63,39 @@ exports.getAllCustomers = async (req, res) => {
         res.status(400).send(error);
     }
 };
+exports.login = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      console.log("Received login request for:", email);
+  
+      const customer = await customerService.checkCustomer(email);
+      if (!customer) {
+        console.log("Customer not found for email:", email);
+        return res.status(401).json({ status: false, error: "Invalid email or password" });
+      }
+  
+      const isMatch = await bcrypt.compare(password, customer.password);
+      if (!isMatch) {
+        console.log("Password mismatch for email:", email);
+        return res.status(401).json({ status: false, error: "Invalid email or password" });
+      }
+  
+      const tokenData = {
+        _id: customer._id,
+        email: customer.email,
+        name: customer.name,
+      };
+      const token = await customerService.generateToken(tokenData, process.env.JWT_SECRET, "1h");
+  
+      console.log("Login successful for email:", email);
+      res.status(200).json({ status: true, token: token });
+    } catch (error) {
+      console.error("Login Error:", error);
+      res.status(500).json({ status: false, error: "Internal Server Error" });
+    }
+  };
+
+
 //get suppliers
 exports.fetchSuppliers = async (req, res) => {
     try {
@@ -186,61 +191,55 @@ exports.addCustomer = async (req, res) => {
         res.status(400).send(error);
     }
 };
-
 //sigup
-exports.signupCustomer = async (req, res) => {
-    const customer = new Customer(req.body);
-    console.log(customer.email)
-        try {
-        await customer.save();
-        res.status(201).send({ message: "Customer registration successful" });
-    } catch (error) {
-        res.status(400).send({ message: "User already exists" });
-    }
-    // const { email, password, username,profilephoto,address, gender,phoneno } = req.body;
-    // const data={
-    //   email:email,
-    //   password:password,
-    //   username: username,
-    //   profilephoto:profilephoto,
-    //   address:address,
-    //   gender:gender,
-    //   phoneno:phoneno,
-    // }
-
-    // try {
-    //   const check = await Customer.find({email:email });
-    //     console.log(check)
-    //   if (check) {
-    //     res.json("exist"); 
-    //   } else {
-    //     res.json("notexist");
-    //     await customer.save();
-    //     res.status(201).send(customer);
-    //   }
-    // } catch (e) {
-    //   res.json("error")
-  
-    // };
-};
-
-
-// //get all customers userprofile
-// exports.getCustomerprofile = async (req, res) => {
-//     // console.log(req.body);
-//     // const customer = new Customer(req.body);
-
-//     try {
-//         const customer = await Customer.find({});
+// exports.signupCustomer = async (req, res) => {
+//     const customer = new Customer(req.body);
+//     console.log(customer)
+//         try {
+//         await customer.save();
 //         res.status(201).send(customer);
 //     } catch (error) {
 //         res.status(400).send(error);
 //     }
+   
 // };
+// Signup controller with additional error logging
+// Signup controller with email conflict handling
+//sigup
+
+
+exports.signupCustomer = async (req, res) => {
+  const { name, email, phone, gender, address, password } = req.body;
+  
+  console.log("Received signup data:");
+  console.log({ email, name, phone, gender, address, password });
+
+  try {
+    // Check if customer already exists by email
+    const existingCustomer = await Customer.findOne({ email });
+    if (existingCustomer) {
+      return res.status(400).send({ message: "User already exists" });
+    }
+
+    // Create a new customer and save to the database
+    const customer = new Customer({ name, email, phone, gender, address, password });
+    await customer.save();
+    console.log("Customer registered successfully:", customer);
+
+    res.status(201).send({ message: "Customer registration successful" });
+  } catch (error) {
+    console.error("Error during customer registration:", error);
+    res.status(500).send({ message: "An error occurred during registration", error: error.message });
+  }
+};
+
+
+  
+
+
 
 
 //get specific user detail for userprofile
-// and for make appointment
 exports.getOneCusprofile = async (req, res) => {
 
     //  router.get("/users/:id",async(req,res)=>{
