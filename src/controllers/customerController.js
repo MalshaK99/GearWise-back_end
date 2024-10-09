@@ -1,4 +1,4 @@
-const Customer =require("../models/customer");
+const Customer = require("../models/customer");
 const Vehicle = require("../models/vehicle");
 const Appointment = require("../models/appoinment");
 const customerService = require("../services/customerService");
@@ -8,27 +8,27 @@ const bcrypt = require('bcrypt');
 
 exports.register = async (req, res, next) => {
     try {
-      const { name, email, phone, password } = req.body;
-  
-      const successRes = await customerService.registerCustomer(
-        name,
-      email,
-      phone,
-      gender,
-      address,
-      password
-      );
-  
-      if (successRes.success) {
-        res.status(201).json({ status: true, message: successRes.message });
-      } else {
-        res.status(400).json({ status: false, error: successRes.message });
-      }
+        const { name, email, phone, password } = req.body;
+
+        const successRes = await customerService.registerCustomer(
+            name,
+            email,
+            phone,
+            gender,
+            address,
+            password
+        );
+
+        if (successRes.success) {
+            res.status(201).json({ status: true, message: successRes.message });
+        } else {
+            res.status(400).json({ status: false, error: successRes.message });
+        }
     } catch (error) {
-      console.error("Error during registration:", error);
-      res.status(500).json({ status: false, error: "Internal Server Error" });
+        console.error("Error during registration:", error);
+        res.status(500).json({ status: false, error: "Internal Server Error" });
     }
-  };
+};
 
 
 exports.getAllCustomers = async (req, res) => {
@@ -63,37 +63,62 @@ exports.getAllCustomers = async (req, res) => {
         res.status(400).send(error);
     }
 };
-exports.login = async (req, res, next) => {
-    try {
-      const { email, password } = req.body;
-      console.log("Received login request for:", email);
-  
-      const customer = await customerService.checkCustomer(email);
-      if (!customer) {
-        console.log("Customer not found for email:", email);
-        return res.status(401).json({ status: false, error: "Invalid email or password" });
+// exports.login = async (req, res, next) => {
+//     try {
+//         const { email, password } = req.body;
+//         console.log("Received login request for:", email);
+
+//         const customer = await customerService.checkCustomer(email);
+//         if (!customer) {
+//             console.log("Customer not found for email:", email);
+//             return res.status(401).json({ status: false, error: "Invalid email or password" });
+//         }
+
+//         const isMatch = await bcrypt.compare(password, customer.password);
+//         if (!isMatch) {
+//             console.log("Password mismatch for email:", email);
+//             return res.status(401).json({ status: false, error: "Invalid email or password" });
+//         }
+
+//          // Store customerId in session ksk
+//         req.session.customerId = customer._id;
+//         res.status(200).json({ status: true, message: "Login successful", customerId: customer._id });
+//         //ksk
+
+//         // const tokenData = {
+//         //     _id: customer._id,
+//         //     email: customer.email,
+//         //     name: customer.name,
+//         // };
+//         // const token = await customerService.generateToken(tokenData, process.env.JWT_SECRET, "1h");
+
+//         // console.log("Login successful for email:", email);
+//         // res.status(200).json({ status: true, token: token });
+//     } catch (error) {
+//         console.error("Login Error:", error);
+//         res.status(500).json({ status: false, error: "Internal Server Error" });
+//     }
+// };
+//ksk for logout
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ status: false, message: "Failed to log out" });
       }
-  
-      const isMatch = await bcrypt.compare(password, customer.password);
-      if (!isMatch) {
-        console.log("Password mismatch for email:", email);
-        return res.status(401).json({ status: false, error: "Invalid email or password" });
-      }
-  
-      const tokenData = {
-        _id: customer._id,
-        email: customer.email,
-        name: customer.name,
-      };
-      const token = await customerService.generateToken(tokenData, process.env.JWT_SECRET, "1h");
-  
-      console.log("Login successful for email:", email);
-      res.status(200).json({ status: true, token: token });
-    } catch (error) {
-      console.error("Login Error:", error);
-      res.status(500).json({ status: false, error: "Internal Server Error" });
+      res.clearCookie('session');
+      res.status(200).json({ status: true, message: "Logged out successfully" });
+    });
+  };
+
+exports.session = (req, res) => {
+    if (req.session && req.session.customerId) {
+        res.json({ customerId: req.session.customerId });
+        console.log("session id:",req.session)
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
     }
   };
+//ksk 
 
 
 //get suppliers
@@ -109,21 +134,23 @@ exports.fetchSuppliers = async (req, res) => {
 // Fetch customer email and password for login
 exports.fetchCustomer = async (req, res) => {
     const { email, password } = req.body;
-  
-    try {
-        const customer = await Customer.findOne({ email: email });
 
+    try {
+        // Check if email or password is empty
+    if (!email || !password) {
+        return res.json({ error: "Email and password are required" });
+    }
+        const customer = await Customer.findOne({ email: email });
         if (!customer) {
             return res.json({ status: "notexist" }); // No customer with that email
         }
-
         // Compare password with hashed password
         const validPassword = await bcrypt.compare(password, customer.password);
         if (!validPassword) {
-            return res.json({ status: "notexist" }); // Incorrect password
+            return res.json({ status: "Incorrect_password" }); // Incorrect password
         }
-
         // If both email and password match, login success
+        req.session.customerId = customer._id; // Store customerId in session
         res.json({ status: "exist", customerId: customer._id });
     } catch (e) {
         console.error(e);
@@ -201,7 +228,7 @@ exports.addCustomer = async (req, res) => {
 //     } catch (error) {
 //         res.status(400).send(error);
 //     }
-   
+
 // };
 // Signup controller with additional error logging
 // Signup controller with email conflict handling
@@ -209,32 +236,32 @@ exports.addCustomer = async (req, res) => {
 
 
 exports.signupCustomer = async (req, res) => {
-  const { name, email, phone, gender, address, password } = req.body;
-  
-  console.log("Received signup data:");
-  console.log({ email, name, phone, gender, address, password });
+    const { name, email, phone, gender, address, password } = req.body;
 
-  try {
-    // Check if customer already exists by email
-    const existingCustomer = await Customer.findOne({ email });
-    if (existingCustomer) {
-      return res.status(400).send({ message: "User already exists" });
+    console.log("Received signup data:");
+    console.log({ email, name, phone, gender, address, password });
+
+    try {
+        // Check if customer already exists by email
+        const existingCustomer = await Customer.findOne({ email });
+        if (existingCustomer) {
+            return res.status(400).send({ message: "User already exists" });
+        }
+
+        // Create a new customer and save to the database
+        const customer = new Customer({ name, email, phone, gender, address, password });
+        await customer.save();
+        console.log("Customer registered successfully:", customer);
+
+        res.status(201).send({ message: "Customer registration successful" });
+    } catch (error) {
+        console.error("Error during customer registration:", error);
+        res.status(500).send({ message: "An error occurred during registration", error: error.message });
     }
-
-    // Create a new customer and save to the database
-    const customer = new Customer({ name, email, phone, gender, address, password });
-    await customer.save();
-    console.log("Customer registered successfully:", customer);
-
-    res.status(201).send({ message: "Customer registration successful" });
-  } catch (error) {
-    console.error("Error during customer registration:", error);
-    res.status(500).send({ message: "An error occurred during registration", error: error.message });
-  }
 };
 
 
-  
+
 
 
 

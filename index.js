@@ -55,12 +55,22 @@ app.use(bodyParser.json());
 
 // Passport setup
 app.use(cookieParser());
+// app.use(session({
+//   secret: process.env.SESSION_SECRET || 'secret', // Use a strong secret key
+//   resave: false,
+//   saveUninitialized: false,
+//   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+// }));
+
+//ksk
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret', // Use a strong secret key
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  store: MongoStore.create({ mongoUrl: process.env.MONGO_URI ,collectionName: 'sessions' }), // Store session in MongoDB
+  cookie: { maxAge: 24 * 60 * 60 * 1000 , secure: false } // Session expiration: 1 day
 }));
+//ksk
 
 // Initialize Passport
 app.use(passport.initialize());
