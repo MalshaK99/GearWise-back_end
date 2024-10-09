@@ -306,7 +306,45 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
+// Update customer password
+exports.updatePassword = async (req, res) => {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    const _id = req.params.id;
 
+    try {
+        // Find the customer by ID
+        const customer = await Customer.findById(_id);
+        if (!customer) {
+            return res.status(404).json({ message: 'Customer not found' });
+        }
 
+        // Compare current password (plain text) with the stored hashed password
+        const isMatch = await bcrypt.compare(currentPassword, customer.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
 
+        // Check if new password and confirm password match
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: 'New password and confirm password do not match' });
+        }
 
+        // Check if the new password is the same as the current password
+        const isNewPasswordSameAsCurrent = await bcrypt.compare(newPassword, customer.password);
+        if (isNewPasswordSameAsCurrent) {
+            return res.status(400).json({ message: 'New password cannot be the same as the current password' });
+        }
+
+        // Hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update the customer's password
+        customer.password = hashedPassword;
+        await customer.save();
+
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
