@@ -22,7 +22,7 @@ router.delete("/:id", vehicleController.deleteVehicleById);
 router.post("/history", vehicleController.addHistory);
 
 //get vehicle history(specific)
-router.get("/history/:vrNo", vehicleController.getHistory);
+router.get("/history/:id", vehicleController.getHistory);
 
 //Add new vehicle (in My Vehicle profile)
 router.post("/newVehicle", vehicleController.addNewVehicle);
