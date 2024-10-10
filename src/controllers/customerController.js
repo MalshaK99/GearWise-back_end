@@ -133,31 +133,42 @@ exports.fetchSuppliers = async (req, res) => {
 //get customer email,pw to logging
 // Fetch customer email and password for login
 exports.fetchCustomer = async (req, res) => {
-    const { email, password } = req.body;
-
+     const { email, password } = req.body;
+    
     try {
-        // Check if email or password is empty
-    if (!email || !password) {
-        return res.json({ error: "Email and password are required" });
-    }
-        const customer = await Customer.findOne({ email: email });
-        if (!customer) {
-            return res.json({ status: "notexist" }); // No customer with that email
-        }
-        // Compare password with hashed password
-        const validPassword = await bcrypt.compare(password, customer.password);
-        if (!validPassword) {
-            return res.json({ status: "Incorrect_password" }); // Incorrect password
-        }
-        // If both email and password match, login success
-        req.session.customerId = customer._id; // Store customerId in session
-        res.json({ status: "exist", customerId: customer._id });
+     // Check if email or password is empty
+     if (!email || !password) {
+     return res.json({ error: "Email and password are required" });
+     }
+    
+     // Find customer by email
+    const customer = await Customer.findOne({ email: email });
+    if (!customer) {
+     return res.json({ status: "notexist" }); // No customer with that email
+     }
+    
+     // Compare password with hashed password
+    const validPassword = await bcrypt.compare(password, customer.password);
+    if (!validPassword) {
+     return res.json({ status: "Incorrect_password" }); // Incorrect password
+     }
+    
+     // If both email and password match, login success
+    req.session.customerId = customer._id; // Store customerId in session
+    const { _id, role } = customer; // Assume `role` field exists in Customer model
+    
+     // Return success with customerId and role
+    res.json({
+    status: "exist",
+    customerId: _id,
+    role: role // Return the role (admin, moderator, supplier, user, etc.)
+     });
     } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: "Internal server error" });
+     console.error(e);
+     res.status(500).json({ error: "Internal server error" });
     }
-};
-
+    };
+    
 
 // Toggle customer status(admin dash)
 exports.toggleCustomerStatus = async (req, res) => {
