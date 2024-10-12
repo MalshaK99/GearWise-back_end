@@ -48,6 +48,7 @@ exports.googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email']
 });
 
+
 // Google authentication callback
 exports.googleAuthCallback = (req, res, next) => {
   passport.authenticate('google', async (err, user, info) => {
@@ -71,11 +72,13 @@ exports.googleAuthCallback = (req, res, next) => {
         console.error(err);
         return next(err);
       }
-      // Successful login
-      return res.status(200).json({ status: 'exist', customerId: existingUser._id });
+      // Send MongoDB _id as customerId in JSON response
+      return res.json({ status: 'exist', customerId: existingUser._id });
     });
   })(req, res, next);
 };
+
+
 
 // Logout controller
 exports.logout = (req, res) => {
