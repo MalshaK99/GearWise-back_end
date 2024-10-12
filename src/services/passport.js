@@ -2,10 +2,9 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const JwtStrategy = require("passport-jwt").Strategy;
 const Customer = require("../models/customer");
-const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
-// Google Strategy
+// Google Strategy (using session)
 passport.use(
   new GoogleStrategy(
     {
@@ -28,7 +27,7 @@ passport.use(
           });
         }
 
-        // Pass the customer to the callback
+        // Use session for Google login
         return done(null, customer);
       } catch (error) {
         console.error("Error during Google strategy authentication:", error);
@@ -38,9 +37,10 @@ passport.use(
   )
 );
 
-// JWT Strategy
+// JWT Strategy (no session)
 const cookieExtractor = (req) => {
   let token = null;
+  // Check for the token in the cookies if needed (optional)
   if (req && req.cookies) {
     token = req.cookies["access_token"];
   }
@@ -50,7 +50,7 @@ const cookieExtractor = (req) => {
 passport.use(
   new JwtStrategy(
     {
-      jwtFromRequest: cookieExtractor,
+      jwtFromRequest: cookieExtractor, // Optional if you aren't using cookies anymore
       secretOrKey: process.env.JWT_SECRET,
     },
     async (payload, done) => {
@@ -69,15 +69,15 @@ passport.use(
   )
 );
 
-// Serialize and deserialize user
+// Serialize and deserialize user for session management (Google only)
 passport.serializeUser((customer, done) => {
-  done(null, customer.id); // Use customer ID for serialization
+  done(null, customer.id); // Only used by Google strategy
 });
 
 passport.deserializeUser(async (id, done) => {
   try {
     const customer = await Customer.findById(id);
-    done(null, customer); // Pass the customer object to complete deserialization
+    done(null, customer); // Only used by Google strategy
   } catch (error) {
     done(error, false);
   }
