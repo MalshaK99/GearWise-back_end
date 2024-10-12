@@ -330,7 +330,7 @@ exports.updatePassword = async (req, res) => {
         }
 
         // Compare current password with the stored hashed password
-        const isMatch = await bcrypt.compare(currentPassword, customer.password);
+        const isMatch = await customer.comparePassword(currentPassword);
         if (!isMatch) {
             return res.status(400).json({ message: 'Current password is incorrect' });
         }
@@ -345,16 +345,12 @@ exports.updatePassword = async (req, res) => {
             return res.status(400).json({ message: 'New password cannot be the same as the current password' });
         }
 
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // Update the customer's password (hashed password)
-        customer.password = hashedPassword;
+        // Update the customer's password directly; pre-save hook will hash it
+        customer.password = newPassword;
         await customer.save();
 
         res.status(200).json({ message: 'Password updated successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Server error', error });
-    }
+    } catch (error) { 
+        res.status(500).json({ message: 'Server error', error }); 
+    } 
 };
