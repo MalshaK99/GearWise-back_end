@@ -202,9 +202,10 @@ exports.addHistory = async (req, res) => {
 // Route to get all appointments for a specific vehicle and fetching the details =vrNo
 exports.getHistory = async (req, res) => {
     const vrNo = req.params.vrNo; // Retrieve vehicle registration number from params
-
+    const _id = req.params.id;
+    console.log("id is",_id);
     try {
-        const history = await Appointment.find({ vrNo: vrNo });
+        const history = await Appointment.find({ customerId:_id }); // update this using customer id
 
         if (!history || history.length === 0) {
             return res.status(404).json({ message: 'No history found for this vehicle.' });

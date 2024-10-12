@@ -42,6 +42,9 @@ router.get("/customerspro/:id", customerController.getOneCusprofile);
 //Update user profile
 router.put("/customerspro/:id", customerController.updateProfile);
 
+// Change password in profile
+router.put('/updatePassword/:id', customerController.updatePassword);
+
 // //ksk
 // router.get('/customerspro', isAuthenticated, async (req, res) => {
 //     try {
