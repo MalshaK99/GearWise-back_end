@@ -65,7 +65,7 @@ router.get(
     const token = signToken(userId);
 
     // Redirect to client with token and loginType as URL parameters
-    res.redirect(`${process.env.CLIENT_URL}/?token=${token}&loginType=${loginType}`);
+    res.redirect(`${process.env.CLIENT_URL}/?token=${token}&loginType=${loginType}&userID=${userId}`);
   }
 );
 
