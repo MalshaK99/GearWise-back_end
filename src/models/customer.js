@@ -6,7 +6,9 @@ const Schema = mongoose.Schema;
 const CustomerSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId; // Required only if googleId is not present
+    },
   },
   email: {
     type: String,
@@ -15,21 +17,23 @@ const CustomerSchema = new Schema({
   },
   phone: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId; // Required only if googleId is not present
+    },
   },
   gender: {
     type: String,
     required: false,
-    default: '',
   },
   address: {
     type: String,
     required: false,
-    default: '',
   },
   password: {
     type: String,
-    required: true,
+    required: function() {
+      return !this.googleId; // Required only if googleId is not present
+    },
   },
   profilePhoto: {
     type: String,
@@ -44,27 +48,26 @@ const CustomerSchema = new Schema({
     default: "customer",
   },
   vehicle: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Vehicle",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   },
   googleId: {
     type: String,
     unique: true,
     sparse: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-// Pre-save hook to hash the password
+// Pre-save hook to hash the password if it exists
 CustomerSchema.pre("save", async function (next) {
-  if (this.isModified("password") || this.isNew) {
+  if (this.password && (this.isModified("password") || this.isNew)) {
     try {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(this.password, salt);
-      this.password = hashedPassword;
+      this.password = await bcrypt.hash(this.password, salt);
     } catch (error) {
       return next(error);
     }
@@ -75,6 +78,9 @@ CustomerSchema.pre("save", async function (next) {
 // Method to compare passwords
 CustomerSchema.methods.comparePassword = async function (candidatePassword) {
   try {
+    if (!this.password) {
+      throw new Error("Password not set for Google-authenticated user.");
+    }
     const isMatch = await bcrypt.compare(candidatePassword, this.password);
     return isMatch;
   } catch (error) {
@@ -83,6 +89,7 @@ CustomerSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 // Check if the model already exists to prevent overwriting
-const Customer = mongoose.models.Customer || mongoose.model("Customer", CustomerSchema);
+const Customer =
+  mongoose.models.Customer || mongoose.model("Customer", CustomerSchema);
 
 module.exports = Customer;
