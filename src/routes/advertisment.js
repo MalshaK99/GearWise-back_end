@@ -38,6 +38,6 @@ router.delete('/admin/:id', advertisementController.deleteAdvertisement);
 
 
 // Get all approved advertisements for customers(kasun)
-router.get('/', advertisementController.getApprovedAdvertisements);
+router.get('/adfromdb', advertisementController.getApprovedAdvertisements);
 
 module.exports = router;
