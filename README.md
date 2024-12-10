@@ -5,3 +5,5 @@ Automotive CRM System is a powerful web application developed to streamline oper
 GearWise is developed using MERN stack
 
 Frontend of GearWise - https://github.com/MalshaK99/GearWise-front-end
+
+Watch the demonstration through: https://youtu.be/ovFegqVDX9w?si=Fqpf1Br_0Dp72cLS
